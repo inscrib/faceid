@@ -14,6 +14,26 @@
   </n-button>
         </n-space>
       </n-layout-header>
+
+
+
+      <n-card title="Your Assets">
+    <n-space vertical>
+      <n-button @click="refetch">Refetch Balance</n-button>
+      <n-alert v-if="error" type="error">{{ error.message }}</n-alert>
+      <n-list v-if="assets">
+        <n-list-item v-for="asset in assets" :key="asset.canisterId">
+          <n-list-item-meta
+            :title="asset.name"
+            :description="`Amount: ${asset.amount}`"
+          />
+        </n-list-item>
+      </n-list>
+    </n-space>
+  </n-card>
+
+
+
       <n-layout-content style="padding: 24px;">
         <div class="waterfall-container">
           <n-card 
@@ -63,7 +83,9 @@
 
 <script setup>
 import { defineComponent,ref, computed } from 'vue'
-import { darkTheme ,useDialog } from 'naive-ui'
+import { darkTheme, useDialog } from 'naive-ui'
+import { useBalance } from '@connect2ic/vue'
+
 const items = ref([
   {
     title: "FACEID",
@@ -85,7 +107,16 @@ const items = ref([
   },
 
 ])
+const [assets, { refetch, error }] = useBalance()
 
+const assetsValue = ref([])
+if (assets) {
+  assetsValue.value = assets.value
+}
+const errorValue = ref(null)
+if (error) {
+  errorValue.value = error.value
+}
 
 const completedProjects = computed(() => {
   return items.value.filter(item => item.progress === 100).length
