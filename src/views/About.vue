@@ -9,9 +9,7 @@
           </n-space>
           <n-statistic label="Total Supply" tabular-nums>
             <n-number-animation ref="numberAnimationInstRef" :from="0" :to="10000000" /></n-statistic>
-            <n-button @click="handleClick">
-    Claim
-  </n-button>
+            <n-button @click="handleClick">Claim</n-button>
         </n-space>
       </n-layout-header>
 

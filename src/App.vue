@@ -7,7 +7,7 @@
 <div class="app-container" :class="{ 'dark-theme': isDarkTheme }">
 <n-layout class="layout">
 <n-layout-header class="header">
-<n-h3>FACEID</n-h3>
+<n-h3>FACEID -- the fairest token distribution</n-h3>
 <n-tabs
 type="segment"
 animated
