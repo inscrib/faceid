@@ -7,7 +7,7 @@
     <template #cover>
       <img src="https://ice.frostsky.com/2024/07/28/4ff747a877adf2d12f8c8dec64db5311.png">
     </template>
-   First Token dispute by face recognize build on the internet computer.<br/>
+   First Token distribution by face recognize build on the internet computer.<br/>
    Use on-chain facial recognition to achieve the fairest token distribution
   </n-card>
   <n-divider />

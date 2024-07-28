@@ -28,6 +28,7 @@
         accept="image/*"
         :default-upload="false"
         @change="handleFileChange"
+        :max="1"
       >
         <n-button>Upload Image</n-button>
       </n-upload>

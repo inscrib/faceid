@@ -8,7 +8,7 @@
             <n-h2 style="margin: 0;">face-id</n-h2>
           </n-space>
           <n-statistic label="Total Supply" tabular-nums>
-            <n-number-animation ref="numberAnimationInstRef" :from="0" :to="10000000" /></n-statistic>
+            <n-number-animation ref="numberAnimationInstRef" :from="0" :to="1000000000000" /></n-statistic>
             <n-button @click="handleClick">Claim</n-button>
         </n-space>
       </n-layout-header>
