@@ -334,7 +334,7 @@
     js-tokens "^4.0.0"
     picocolors "^1.0.0"
 
-"@babel/parser@^7.1.0", "@babel/parser@^7.14.7", "@babel/parser@^7.20.7", "@babel/parser@^7.23.9", "@babel/parser@^7.24.7", "@babel/parser@^7.24.8", "@babel/parser@^7.25.0":
+"@babel/parser@^7.1.0", "@babel/parser@^7.14.7", "@babel/parser@^7.20.7", "@babel/parser@^7.23.9", "@babel/parser@^7.24.7", "@babel/parser@^7.24.8", "@babel/parser@^7.25.0", "@babel/parser@^7.7.0":
   version "7.25.0"
   resolved "https://registry.npmmirror.com/@babel/parser/-/parser-7.25.0.tgz#9fdc9237504d797b6e7b8f66e78ea7f570d256ad"
   integrity sha512-CzdIU9jdP0dg7HdyB+bHvDJGagUv+qtzZt5rYCWwW6tITNqV9odjp6Qu41gkG0ca5UfdDUWrKkiAnHHdGRnOrA==
@@ -1079,7 +1079,7 @@
     "@babel/parser" "^7.25.0"
     "@babel/types" "^7.25.0"
 
-"@babel/traverse@^7.23.9", "@babel/traverse@^7.24.7", "@babel/traverse@^7.24.8", "@babel/traverse@^7.25.0":
+"@babel/traverse@^7.23.9", "@babel/traverse@^7.24.7", "@babel/traverse@^7.24.8", "@babel/traverse@^7.25.0", "@babel/traverse@^7.7.0":
   version "7.25.0"
   resolved "https://registry.npmmirror.com/@babel/traverse/-/traverse-7.25.0.tgz#e8533c0a57ed97921d1e5b20dd3db63d3efaebf5"
   integrity sha512-ubALThHQy4GCf6mbb+5ZRNmLLCI7bJ3f8Q6LHBSRlSKSWj5a7dSUzJBLv3VuIhFrFPgjF4IzPF567YG/HSCdZA==
@@ -1092,7 +1092,7 @@
     debug "^4.3.1"
     globals "^11.1.0"
 
-"@babel/types@^7.0.0", "@babel/types@^7.20.7", "@babel/types@^7.22.15", "@babel/types@^7.23.9", "@babel/types@^7.24.7", "@babel/types@^7.24.8", "@babel/types@^7.24.9", "@babel/types@^7.25.0", "@babel/types@^7.3.3", "@babel/types@^7.4.4":
+"@babel/types@^7.0.0", "@babel/types@^7.20.7", "@babel/types@^7.22.15", "@babel/types@^7.23.9", "@babel/types@^7.24.7", "@babel/types@^7.24.8", "@babel/types@^7.24.9", "@babel/types@^7.25.0", "@babel/types@^7.3.3", "@babel/types@^7.4.4", "@babel/types@^7.7.0":
   version "7.25.0"
   resolved "https://registry.npmmirror.com/@babel/types/-/types-7.25.0.tgz#e6e3656c581f28da8452ed4f69e38008ec0ba41b"
   integrity sha512-LcnxQSsd9aXOIgmmSpvZ/1yo46ra2ESYyqLcryaBZOghxy5qqOBjvCWP5JfkI8yl9rlxRgdLTTMCQQRcN2hdCg==
@@ -1178,6 +1178,16 @@
     simple-cbor "^0.4.1"
     ts-node "^10.8.2"
 
+"@dfinity/agent@^0.18.1":
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/agent/-/agent-0.18.1.tgz#091662b9aa111943d3c63409792161aa9fb757c1"
+  integrity sha512-nMFK/y0ZkPfQYECdojmltXsBIdGvXa1Sxa4rDV2cibEq9lsjWMEIUqPsiBaNHuwuz+gzsGVq4N2b9umKQIQaRQ==
+  dependencies:
+    base64-arraybuffer "^0.2.0"
+    borc "^2.1.1"
+    js-sha256 "0.9.0"
+    simple-cbor "^0.4.1"
+
 "@dfinity/agent@^0.19.2", "@dfinity/agent@^0.19.3":
   version "0.19.3"
   resolved "https://registry.yarnpkg.com/@dfinity/agent/-/agent-0.19.3.tgz#aa3f9c0f67d8e8f81714650ebb2a38e1b691021b"
@@ -1186,18 +1196,6 @@
     "@noble/hashes" "^1.3.1"
     base64-arraybuffer "^0.2.0"
     borc "^2.1.1"
-    simple-cbor "^0.4.1"
-
-"@dfinity/agent@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@dfinity/agent/-/agent-2.0.0.tgz#2c28d52b179af09f8b8998761ddaf81fcbd6d9c6"
-  integrity sha512-Cc2VDAMfxCNIQoaEeKPf0rbS/Y21HAF+eEFj6GfijNnUxS42i4zwUF2PUvEJZqaB2FQwA9SC7MDyuwL8BR2oJA==
-  dependencies:
-    "@noble/curves" "^1.4.0"
-    "@noble/hashes" "^1.3.1"
-    base64-arraybuffer "^0.2.0"
-    borc "^2.1.1"
-    buffer "^6.0.3"
     simple-cbor "^0.4.1"
 
 "@dfinity/auth-client@^0.19.3":
@@ -1653,7 +1651,7 @@
   dependencies:
     eslint-scope "5.1.1"
 
-"@noble/curves@^1.2.0", "@noble/curves@^1.4.0":
+"@noble/curves@^1.2.0":
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.4.2.tgz#40309198c76ed71bc6dbf7ba24e81ceb4d0d1fe9"
   integrity sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==
@@ -2846,6 +2844,18 @@ autoprefixer@^10.2.4:
     picocolors "^1.0.0"
     postcss-value-parser "^4.2.0"
 
+babel-eslint@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-10.1.0.tgz#6968e568a910b78fb3779cdd8b6ac2f479943232"
+  integrity sha512-ifWaTHQ0ce+448CYop8AdrQiBsGrnC+bMgfyKFdi6EsPLTAWG+QfyDeM6OH+FmWnKvEq5NnBMLvlBUPKQZoDSg==
+  dependencies:
+    "@babel/code-frame" "^7.0.0"
+    "@babel/parser" "^7.7.0"
+    "@babel/traverse" "^7.7.0"
+    "@babel/types" "^7.7.0"
+    eslint-visitor-keys "^1.0.0"
+    resolve "^1.12.0"
+
 babel-jest@^29.7.0:
   version "29.7.0"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-29.7.0.tgz#f4369919225b684c56085998ac63dbd05be020d5"
@@ -3483,14 +3493,9 @@ core-js-compat@^3.36.1, core-js-compat@^3.37.1, core-js-compat@^3.8.3:
   dependencies:
     browserslist "^4.23.0"
 
-core-js@^3.37.1:
+core-js@^3.37.1, core-js@^3.8.3:
   version "3.37.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.37.1.tgz#d21751ddb756518ac5a00e4d66499df981a62db9"
-  integrity sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==
-
-core-js@^3.8.3:
-  version "3.37.1"
-  resolved "https://registry.npmmirror.com/core-js/-/core-js-3.37.1.tgz#d21751ddb756518ac5a00e4d66499df981a62db9"
   integrity sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==
 
 core-util-is@~1.0.0:
@@ -4253,7 +4258,7 @@ eslint-utils@^3.0.0:
   dependencies:
     eslint-visitor-keys "^2.0.0"
 
-eslint-visitor-keys@^1.1.0, eslint-visitor-keys@^1.3.0:
+eslint-visitor-keys@^1.0.0, eslint-visitor-keys@^1.1.0, eslint-visitor-keys@^1.3.0:
   version "1.3.0"
   resolved "https://registry.npmmirror.com/eslint-visitor-keys/-/eslint-visitor-keys-1.3.0.tgz#30ebd1ef7c2fdff01c3a4f151044af25fab0523e"
   integrity sha512-6J72N8UNa462wa/KFODt/PJ3IU60SDpC3QXC1Hjc1BXXpfL2C9R5+AU7jhe0F6GREqVMh4Juu+NY7xn+6dipUQ==
@@ -7137,7 +7142,7 @@ resolve.exports@^2.0.0:
   resolved "https://registry.yarnpkg.com/resolve.exports/-/resolve.exports-2.0.2.tgz#f8c934b8e6a13f539e38b7098e2e36134f01e800"
   integrity sha512-X2UW6Nw3n/aMgDVy+0rSqgHlv39WZAlZrXCdnbyEiKm17DSqHX4MmQMaST3FbeWR5FTuRcUwYAziZajji0Y7mg==
 
-resolve@^1.10.0, resolve@^1.14.2, resolve@^1.20.0, resolve@^1.22.1:
+resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.20.0, resolve@^1.22.1:
   version "1.22.8"
   resolved "https://registry.npmmirror.com/resolve/-/resolve-1.22.8.tgz#b6c87a9f2aa06dfab52e3d70ac8cde321fa5a48d"
   integrity sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==

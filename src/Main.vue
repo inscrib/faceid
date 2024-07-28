@@ -3,14 +3,17 @@ import { createClient } from "@connect2ic/core"
 import { Connect2ICProvider } from "@connect2ic/vue"
 import App from './App.vue'
 import { defaultProviders } from "@connect2ic/core/providers"
-import * as couter from "./backend";
+import * as couter from "./backend"
 
 const client = createClient({
   providers: defaultProviders,
   canisters: {
     couter
-  }
-})
+  },
+  globalProviderConfig: {
+    host: 'https://ic0.app/', // 替换为实际的 IC 网络地址
+  },
+});
 </script>
 
 <template>

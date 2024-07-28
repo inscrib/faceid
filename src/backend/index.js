@@ -6,7 +6,7 @@ export { idlFactory } from "./backend.did.js";
 
 /* CANISTER_ID is replaced by webpack based on node environment
  * Note: canister environment variable will be standardized as
- * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
+ * process.env.CANISTERID<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
 // export const canisterId =
@@ -29,7 +29,6 @@ export const createActor = (canisterId, options = {}) => {
     );
   }
 
-
   // 在非生产环境中获取root key，用于开发中的证书验证
   if (process.env.DFX_NETWORK !== 'ic') {
     agent.fetchRootKey().catch((err) => {
@@ -47,3 +46,4 @@ export const createActor = (canisterId, options = {}) => {
     ...options.actorOptions,
   });
 };
+
