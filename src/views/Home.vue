@@ -25,7 +25,7 @@
     :bordered="false"
   />
   <n-divider />
-  <n-button @click="$router.push('/upload')">
+  <n-button @click="$router.push('/test')">
       DEPLOY
     </n-button>
   </n-card>
