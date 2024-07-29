@@ -168,13 +168,6 @@ export default {
 
 
 
-    // const next = async () => {
-    //   if (current.value < 3 && canProceed.value) {
-    //     current.value++;
-    //   }
-    // };
-
-
     const refreshPage = () => {
       if (typeof window !== 'undefined') {
         window.location.reload();
@@ -348,32 +341,6 @@ export default {
         }
       reader.readAsDataURL(file.file);
     };
-
-    // const restart = async () => {
-    //   showRestart.value = false;
-    //   try {
-    //     const stream = await navigator.mediaDevices.getUserMedia({
-    //       video: true,
-    //       audio: false,
-    //     });
-    //     video.value.srcObject = stream;
-    //     video.value.play();
-    //     showButtons.value = true;
-    //     showVideo.value = true;
-    //     showImage.value = false;
-    //     showCanvas.value = false;
-    //     addButtonDisabled.value = false;
-    //   } catch (err) {
-    //     console.error(`An error occurred:${err}`);
-    //     showImage.value = true;
-    //     showButtons.value = true;
-    //     showVideo.value = false;
-    //     showCanvas.value = false;
-    //     message.warning("Unable to launch camera, but you can upload photos");
-    //   }
-    // };
-
-
 
     const restart = async () => {
   showRestart.value = false

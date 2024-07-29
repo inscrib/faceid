@@ -68,12 +68,14 @@ v-model:value="activeTab"
           <p>Connected with principal: {{ principal }}</p>
           <p>Active provider: {{ activeProvider?.meta.name }}</p>
         </div>
+        <router-view></router-view>
       </template>
       
       <div v-else class="disconnected-message">
         <p>Please connect to use the app</p>
       </div>
-      <router-view></router-view>
+
+
 
 
     </div>

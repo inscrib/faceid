@@ -1,272 +1,180 @@
 <template>
-    <n-card title="Upload">
+  <n-card title="Token Upload Form">
+    <n-form
+      ref="formRef"
+      :model="model"
+      :rules="rules"
+      :size="size"
+      label-placement="top"
+    >
+      <n-grid :cols="24" :x-gap="24">
+        <n-form-item-gi :span="12" label="Token ID" path="tokenId">
+          <n-input v-model:value="model.tokenId" placeholder="Enter Token ID" />
+        </n-form-item-gi>
 
-  <n-form
-    ref="formRef"
-    :model="model"
-    :rules="rules"
-    :size="size"
-    label-placement="top"
-  >
-    <n-grid :cols="24" :x-gap="24">
-      <n-form-item-gi :span="12" label="Token-ID" path="inputValue">
-        <n-input v-model:value="model.inputValue" placeholder="Token Name" />
-      </n-form-item-gi>
+        <n-form-item-gi :span="12" label="Token Logo" path="logo">
+          <n-upload accept="image/*">
+            <n-button>Upload Logo</n-button>
+          </n-upload>
+        </n-form-item-gi>
+
+        <n-form-item-gi :span="12" label="Token Supply" path="tokenSupply">
+          <n-input v-model:value="model.tokenSupply" placeholder="Enter Token Supply" />
+        </n-form-item-gi>
+
+        <n-form-item-gi :span="12" label="Token Standard" path="tokenStandard">
+          <n-cascader
+            v-model:value="model.tokenStandard"
+            placeholder="Select Token Standard"
+            :options="tokenStandardOptions"
+            check-strategy="child"
+          />
+        </n-form-item-gi>
+
+        <n-form-item-gi :span="12" label="Valid Targets" path="validTargets">
+          <n-select
+            v-model:value="model.validTargets"
+            placeholder="Select Valid Targets"
+            :options="targetOptions"
+            multiple
+          />
+        </n-form-item-gi>
+        <n-form-item-gi :span="12" label="Minimum Similarity (%)" path="minSimilarity">
+          <n-slider v-model:value="model.minSimilarity" :step="1" :min="0" :max="100" />
+        </n-form-item-gi>
+
+        <n-form-item-gi :span="24" label="Token Description" path="description">
+          <n-input
+            v-model:value="model.description"
+            placeholder="Enter Token Description"
+            type="textarea"
+            :autosize="{ minRows: 3, maxRows: 5 }"
+          />
+        </n-form-item-gi>
 
 
-      <n-form-item-gi :span="12" label="LOGO" path="inputValue">
-        <n-upload>
-          <n-button>Upload file</n-button>
-        </n-upload>
-      </n-form-item-gi>
 
-      <n-form-item-gi :span="12" label="Token-num" path="inputValue">
-        <n-input v-model:value="model.inputValue2" placeholder="Token Name" />
-      </n-form-item-gi>
 
-      <n-form-item-gi :span="12" label="Valid Target" path="selectValue">
-        <n-select
-          v-model:value="model.selectValue"
-          placeholder="Select"
-          :options="alOptions"
-        />
-      </n-form-item-gi>
+        <n-form-item-gi :span="12" label="Token Attributes" path="attributes">
+          <n-transfer
+            v-model:value="model.attributes"
+            :options="attributeOptions"
+          />
+        </n-form-item-gi>
+        <n-form-item-gi :span="12" label="Launch Date" path="launchDate">
+          <n-date-picker v-model:value="model.launchDate" type="datetime" />
+        </n-form-item-gi>
 
-      <n-form-item-gi :span="12" label="Introduction" path="textareaValue">
-        <n-input
-          v-model:value="model.textareaValue"
-          placeholder="Introduction"
-          type="textarea"
-          :autosize="{
-            minRows: 3,
-            maxRows: 5,
-          }"
-        />
-      </n-form-item-gi>
 
-      <n-form-item-gi :span="12" label="Min similarity" path="sliderValue">
-        <n-slider v-model:value="model.sliderValue" :step="5" />
-      </n-form-item-gi>
-
-      <n-form-item-gi :span="12" label="Launch Datetime" path="datetimeValue">
-        <n-date-picker v-model:value="model.datetimeValue" type="datetime" />
-      </n-form-item-gi>
-
-      <n-form-item-gi :span="10" label="Standard" path="cascaderValue">
-
-<n-cascader
-  v-model:value="model.cascaderValue"
-  placeholder="token standard"
-  :options="cascaderOptions"
-  check-strategy="child"
-  size="medium"
-/>
-</n-form-item-gi>
-
-      <n-form-item-gi :span="14" label="Attribute" path="transferValue">
-        <n-transfer
-          v-model:value="model.transferValue"
-          style="width: 100%"
-          :options="generalOptions"
-        />
-      </n-form-item-gi>
-
-      <n-gi :span="24">
-        <div style="display: flex; justify-content: flex-end">
-          <n-button round type="primary" @click="handleValidateButtonClick">
-            Confirm
-          </n-button>
-        </div>
-      </n-gi>
-    </n-grid>
-  </n-form>
-</n-card>
+        <n-gi :span="24">
+          <div style="display: flex; justify-content: flex-end">
+            <n-button round type="primary" @click="handleSubmit">
+              Submit
+            </n-button>
+          </div>
+        </n-gi>
+      </n-grid>
+    </n-form>
+  </n-card>
 </template>
 
-<script>
-import { defineComponent, ref,computed } from "vue";
+<script setup>
+import { ref } from "vue";
 import { useMessage } from "naive-ui";
-function genOptions(depth = 2, iterator = 1, prefix = "") {
-  const length = 12;
-  const options = [];
-  for (let i = 1; i <= length; ++i) {
-    if (iterator === 1) {
-      options.push({
-        value: `${i}`,
-        label: `${i}`,
-        disabled: i % 5 === 0,
-        children: genOptions(depth, iterator + 1, `${i}`)
-      });
-    } else if (iterator === depth) {
-      options.push({
-        value: `${prefix}-${i}`,
-        label: `${prefix}-${i}`,
-        disabled: i % 5 === 0
-      });
-    } else {
-      options.push({
-        value: `${prefix}-${i}`,
-        label: `${prefix}-${i}`,
-        disabled: i % 5 === 0,
-        children: genOptions(depth, iterator + 1, `${prefix}-${i}`)
-      });
-    }
-  }
-  return options;
-}
-export default defineComponent({
-  setup() {
-    const formRef = ref(null);
-    const message = useMessage();
-    return {
-      formRef,
-      size: ref("medium"),
-      model: ref({ 
-        inputValue: null,
-        textareaValue: null,
-        selectValue: null,
-        multipleSelectValue: null,
-        datetimeValue: null,
-        nestedValue: {
-          path1: null,
-          path2: null
-        },
-        switchValue: false,
-        checkboxGroupValue: null,
-        radioGroupValue: null,
-        radioButtonGroupValue: null,
-        inputNumberValue: null,
-        timePickerValue: null,
-        sliderValue: 0,
-        transferValue: null,
-        cascaderValue: null,
 
-      }),
-      generalOptions: ["HUMAN", "PET", "PASSCARD", "MORE..."].map(
-        (v) => ({
-          label: v,
-          value: v
-        })
-      ),
-      generalOptions: ["1", "2", "3", "4"].map(
-        (v) => ({
-          label: v,
-          value: v
-        })
-      ),
-      cascaderOptions: [
-        {
-          label: "ICRC1",
-          value: "groode"
-        },
-        {
-          label: "DRC20",
-          value: "groode"
-        },
-        {
-          label: "EXT20",
-          value: "groode",
-          children: [
-            {
-              label: "nft",
-              value: "token"
-            },            {
-              label: "token",
-              value: "token"
-            }
-          ]
-        }
+const formRef = ref(null);
+const message = useMessage();
+const size = ref("medium");
 
-
-
-      ],
-      return: {
-        options: genOptions()
-},
-      rules: {
-        inputValue: {
-          required: true,
-          trigger: ["blur", "input"],
-          message: "Enter something"
-        },
-        textareaValue: {
-          required: true,
-          trigger: ["blur", "input"],
-          message: "Enter somethinge"
-        },
-        selectValue: {
-          required: true,
-          trigger: ["blur", "change"],
-          message: "Enter something"
-        },
-        multipleSelectValue: {
-          type: "array",
-          required: true,
-          trigger: ["blur", "change"],
-          message: "Enter something"
-        },
-        datetimeValue: {
-          type: "number",
-          required: true,
-          trigger: ["blur", "change"],
-          message: "Enter something"
-        },
-        nestedValue: {
-          path1: {
-            required: true,
-            trigger: ["blur", "input"],
-            message: "Enter something"
-          },
-          path2: {
-            required: true,
-            trigger: ["blur", "change"],
-            message: "Enter something"
-          }
-        },
-        checkboxGroupValue: {
-          type: "array",
-          required: true,
-          trigger: "change",
-          message: "Enter something"
-        },
-        radioGroupValue: {
-          required: true,
-          trigger: "change",
-          message: "Enter something"
-        },
-        inputNumberValue: {
-          type: "number",
-          required: true,
-          trigger: ["blur", "change"],
-          message: "PLS input inputNumberValue"
-        },
-        timePickerValue: {
-          type: "number",
-          required: true,
-          trigger: ["blur", "change"],
-          message: "PLS input timePickerValue"
-        },
-        sliderValue: {
-          validator(rule, value) {
-            return value > 20;
-          },
-          trigger: ["blur", "change"],
-          message: "SIMILARITY NEED LARGER THAN 20"
-        },
-        transferValue: {
-          type: "array",
-          required: true,
-          trigger: "change",
-          message: "请输入 transferValue"
-        }
-      },
-
-      handleValidateButtonClick(e) {
-
-
-            message.error("Fonction is not avaliable");
-          } 
-    };
-  }
+const model = ref({
+  tokenId: null,
+  tokenSupply: null,
+  tokenStandard: null,
+  validTargets: [],
+  launchDate: null,
+  minSimilarity: 50,
+  attributes: [],
+  description: null,
 });
+
+const targetOptions = [
+  { label: "Human", value: "human" },
+  { label: "Pet", value: "pet" },
+  { label: "Pass Card", value: "passcard" },
+  { label: "Other", value: "other" },
+];
+
+const attributeOptions = [
+  { label: "Transferable", value: "transferable" },
+  { label: "Burnable", value: "burnable" },
+  { label: "Mintable", value: "mintable" },
+  { label: "Pausable", value: "pausable" },
+];
+
+const tokenStandardOptions = [
+  { label: "ICRC-1", value: "icrc1" },
+  { label: "DRC-20", value: "drc20" },
+  {
+    label: "EXT-20",
+    value: "ext20",
+    children: [
+      { label: "NFT", value: "nft" },
+      { label: "Fungible Token", value: "fungible" },
+    ],
+  },
+];
+
+const rules = {
+  tokenId: {
+    required: true,
+    trigger: ["blur", "input"],
+    message: "Please enter a Token ID",
+  },
+  tokenSupply: {
+    required: true,
+    trigger: ["blur", "input"],
+    message: "Please enter the Token Supply",
+  },
+  tokenStandard: {
+    required: true,
+    trigger: ["blur", "change"],
+    message: "Please select a Token Standard",
+  },
+  validTargets: {
+    type: "array",
+    required: true,
+    trigger: ["blur", "change"],
+    message: "Please select at least one Valid Target",
+  },
+  launchDate: {
+    type: "number",
+    required: true,
+    trigger: ["blur", "change"],
+    message: "Please select a Launch Date",
+  },
+  minSimilarity: {
+    validator(rule, value) {
+      return value >= 0 && value <= 100;
+    },
+    trigger: ["blur", "change"],
+    message: "Minimum Similarity must be between 0 and 100",
+  },
+  description: {
+    required: true,
+    trigger: ["blur", "input"],
+    message: "Please enter a Token Description",
+  },
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  formRef.value?.validate((errors) => {
+    if (!errors) {
+      message.success("Form submitted successfully");
+      console.log(model.value);
+    } else {
+      message.error("Please fix the errors in the form");
+    }
+  });
+};
 </script>

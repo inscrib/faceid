@@ -1,130 +1,174 @@
 <template>
-  <n-config-provider :theme="darkTheme">
-    <n-layout>
-      <n-layout-header bordered style="padding: 16px 24px;">
+  <div class="query-dashboard">
+
+    <n-layout-header bordered style="padding: 16px 24px;">
         <n-space align="center" justify="space-between">
           <n-space align="center">
             <n-avatar  :size="48" src="https://pbs.twimg.com/profile_images/1773015678758387712/XQIG1d9o_400x400.jpg" />
             <n-h2 style="margin: 0;">face-id</n-h2>
           </n-space>
-          <n-statistic label="Total Supply" tabular-nums>
-            <n-number-animation ref="numberAnimationInstRef" :from="0" :to="1000000000000" /></n-statistic>
+          <!-- <n-statistic label="Total Supply" tabular-nums> -->
+            <!-- <n-number-animation ref="numberAnimationInstRef" :from="0" :to="1000000000000" /></n-statistic> -->
             <n-button @click="handleClick">Claim</n-button>
         </n-space>
       </n-layout-header>
-
-
-
       <n-card title="Your Assets">
-    <n-space vertical>
-      <n-button @click="refetch">Refetch Balance</n-button>
-      <n-alert v-if="error" type="error">{{ error.message }}</n-alert>
-      <n-list v-if="assets">
-        <n-list-item v-for="asset in assets" :key="asset.canisterId">
-          <n-list-item-meta
-            :title="asset.name"
-            :description="`Amount: ${asset.amount}`"
-          />
-        </n-list-item>
-      </n-list>
-    </n-space>
-  </n-card>
 
+  <n-spin :show="loading">
+      <n-space vertical>
+        <pre>{{ debugInfo }}</pre>
+    <n-button @click="fetchBalance" :loading="loading">
+      Fetch Balance
+    </n-button>
 
+      </n-space>
+    </n-spin>
+</n-card>
 
-      <n-layout-content style="padding: 24px;">
-        <div class="waterfall-container">
-          <n-card 
-            v-for="(item, index) in items" 
-            :key="index"
-            class="waterfall-item"
-            :bordered="false"
-            :segmented="{ content: true, footer: 'soft' }"
-          >
-            <template #header>
-              <n-h3 style="margin: 0;">{{ item.title }}</n-h3>
-            </template>
-            <n-p style="margin: 16px 0;">{{ item.content }}</n-p>
-            <template #footer>
+    <h1>ICP Query Dashboard</h1>
+    <n-card title="Cycles Information">
+      <n-space vertical>
+        <n-statistic label="Current Cycles">
+          {{ cycles }}
+        </n-statistic>
+        <n-button @click="getCycles" :loading="loadingCycles">
+          Get Cycles
+        </n-button>
+      </n-space>
+    </n-card>
 
-              <n-space vertical size="large">
-                <n-progress 
-                  type="line" 
-                  :percentage="item.progress" 
-                  :color="getProgressColor(item.progress)"
-                  :height="8"
-                  :border-radius="4"
-                >
-                  Progress: {{ item.progress }}%
+    <n-card title="Authorized Users" class="mt-4">
+      <n-space vertical>
+        <n-statistic label="Total Authorized Users">
+          {{ totalUsers }}
+        </n-statistic>
+        <n-button @click="getAuthorizedUsers" :loading="loadingUsers">
+          Get Authorized Users
+        </n-button>
+        <n-list bordered v-if="users.length">
+          <n-list-item v-for="user in users" :key="user">
+            {{ user }}
+          </n-list-item>
+        </n-list>
+      </n-space>
+    </n-card>
 
-                </n-progress>
-        
-                <n-timeline >
-                  <n-timeline-item 
-                    v-for="event in item.timeline" 
-                    :key="event.date" 
-                    :type="event.type" 
-                    :title="event.title" 
-                    :content="event.date" 
-                  />
-                </n-timeline>
- 
-              </n-space>
-            </template>
-          </n-card>
-        </div>
-      </n-layout-content>
-    </n-layout>
-    <n-back-top :right="20" />
-  </n-config-provider>
+    <n-card title="Recognition Results" class="mt-4">
+      <n-space vertical>
+        <n-button @click="getRecognitionResults" :loading="loadingResults">
+          Get Recognition Results
+        </n-button>
+        <n-data-table
+          :columns="columns"
+          :data="results"
+          :bordered="false"
+          v-if="results.length"
+        />
+      </n-space>
+    </n-card>
+  </div>
 </template>
 
 <script setup>
-import { defineComponent,ref, computed } from 'vue'
-import { darkTheme, useDialog } from 'naive-ui'
-import { useBalance } from '@connect2ic/vue'
+import { ref ,computed } from 'vue'
+import { useCanister ,useBalance,useConnect  } from '@connect2ic/vue'
+import { useDialog } from 'naive-ui'
 
-const items = ref([
-  {
-    title: "FACEID",
-    content: "The first fair distribution using face recognition MEME",
-    progress: 1,
-    timeline: [
-      { type: "success", title: "Mint.." },
-      { type: "error", title: "loading..." },
-      { type: "info", title: "..." },
-    ]
-  },
-  {
-    title: "Other",
-    content: "Upcoming",
-    progress: 0,
-    timeline: [
-      { type: "success", title: "..." },
-    ]
-  },
+const [canister] = useCanister("couter", { mode: "anonymous" })
 
-])
+const loading = ref(false)
+const debugInfo = ref({})
+
+const { isConnected, connect } = useConnect()
 const [assets, { refetch, error }] = useBalance()
 
-const assetsValue = ref([])
-if (assets) {
-  assetsValue.value = assets.value
-}
-const errorValue = ref(null)
-if (error) {
-  errorValue.value = error.value
+const fetchBalance = async () => {
+  loading.value = true
+  try {
+    if (!isConnected.value) {
+      await connect()
+    }
+    await refetch()
+    debugInfo.value = {
+      isConnected: isConnected.value,
+      assets: assets.value,
+      error: error.value
+    }
+  } catch (e) {
+    debugInfo.value = {
+      error: e.message,
+      stack: e.stack
+    }
+  } finally {
+    loading.value = false
+  }
 }
 
-const completedProjects = computed(() => {
-  return items.value.filter(item => item.progress === 100).length
-})
 
-const getProgressColor = (progress) => {
-  if (progress < 30) return '#ff4d4f'
-  if (progress < 70) return '#faad14'
-  return '#52c41a'
+// Cycles
+const cycles = ref(0)
+const loadingCycles = ref(false)
+
+const getCycles = async () => {
+  loadingCycles.value = true
+  try {
+    cycles.value = await canister.value.get_cycles()
+  } catch (error) {
+    console.error('Error getting cycles:', error)
+  } finally {
+    loadingCycles.value = false
+  }
 }
+
+// Authorized Users
+const totalUsers = ref(0)
+const users = ref([])
+const loadingUsers = ref(false)
+
+const getAuthorizedUsers = async () => {
+  loadingUsers.value = true
+  try {
+    const [count, principals] = await canister.value.get_add_callers()
+    totalUsers.value = count
+    users.value = principals
+  } catch (error) {
+    console.error('Error getting authorized users:', error)
+  } finally {
+    loadingUsers.value = false
+  }
+}
+
+// Recognition Results
+const results = ref([])
+const loadingResults = ref(false)
+
+const columns = [
+  { title: 'PID', key: 'pid' },
+  { title: 'Label', key: 'label' },
+  { title: 'Score', key: 'score' }
+]
+
+const getRecognitionResults = async () => {
+  loadingResults.value = true
+  try {
+    const rawResults = await canister.value.get_all_recognition_results()
+    results.value = rawResults.map(result => {
+      const [pid, label, score] = result.split(',')
+      return { 
+        pid: pid.replace('principal:', '').trim(), 
+        label: label.replace('label:', '').trim(), 
+        score: score.replace('score:', '').trim() 
+      }
+    })
+  } catch (error) {
+    console.error('Error getting recognition results:', error)
+  } finally {
+    loadingResults.value = false
+  }
+}
+
+
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const dialog = useDialog();
@@ -164,23 +208,21 @@ const handleClick = () => {
 };
 
 
+
+
+
+
+
+
 </script>
 
 <style scoped>
-.waterfall-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-gap: 24px;
-  grid-auto-flow: dense;
+.query-dashboard {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
-
-.waterfall-item {
-  break-inside: avoid;
-  transition: all 0.3s ease;
-}
-
-.waterfall-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+.mt-4 {
+  margin-top: 1rem;
 }
 </style>
