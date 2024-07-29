@@ -6,7 +6,7 @@
 <div class="background">
 <div class="app-container" :class="{ 'dark-theme': isDarkTheme }">
 <n-layout class="layout">
-<n-layout-header class="header">
+<!-- <n-layout-header class="header">
 <n-h3>FACEID -- the fairest token distribution</n-h3>
 <n-tabs
 type="segment"
@@ -17,27 +17,68 @@ v-model:value="activeTab"
 <n-tab-pane name="Home" tab="Home" />
 <n-tab-pane name="Upload" tab="Upload" />
 <n-tab-pane name="About" tab="About" />
+<n-tab-pane name="test" tab="test" />
+
 </n-tabs>
-</n-layout-header>
+</n-layout-header> -->
+
+
+
+<n-layout-header class="header">
+    <div class="header-content">
+      <div class="title-section">
+      <n-gradient-text
+       class="main-title"
+        :size="28"
+        :gradient="{
+         from: 'rgb(82, 36, 129)',
+         to: 'rgb(255, 132, 0)',
+        }"
+      >
+        FACEID
+      </n-gradient-text>
+      <n-text class="subtitle" :depth="3">
+        the fairest token distribution
+      </n-text>
+    </div>
+    <n-tabs
+      type="segment"
+      animated
+      :value="activeTab"
+      @update:value="handleTabChange"
+      class="nav-tabs"
+    >
+      <n-tab-pane name="Home" tab="Home" />
+      <n-tab-pane name="Upload" tab="Upload" />
+      <n-tab-pane name="About" tab="About" />
+      <n-tab-pane name="test" tab="Test" />
+    </n-tabs>
+    </div>
+  </n-layout-header>
+
+
 
 <n-layout-content class="main-content">
-<div class="content-wrapper">
-  
-<connect-button class="large-button" />
-<connect-dialog />
-<div v-if="isConnected" class="connected-content">
-<p>Connected with principal: {{ principal }}</p>
-<p>Active provider: {{ activeProvider?.meta.name }}</p>
-<router-view></router-view>
+    <div class="content-wrapper">
+      <connect-button class="large-button" />
+      <connect-dialog />
+      
+      <template v-if="isConnected">
+        <div class="connected-content">
+          <p>Connected with principal: {{ principal }}</p>
+          <p>Active provider: {{ activeProvider?.meta.name }}</p>
+        </div>
+      </template>
+      
+      <div v-else class="disconnected-message">
+        <p>Please connect to use the app</p>
+      </div>
+      <router-view></router-view>
 
-</div>
-<div v-else class="disconnected-message">
-<p>Please connect to use the app</p>
-</div>
 
+    </div>
+  </n-layout-content>
 
-</div>
-</n-layout-content>
 
 
 
@@ -95,6 +136,8 @@ const route = useRoute();
 const currentTheme = ref(naiveDarkTheme);
 const isDarkTheme = ref(true);
 const activeTab = ref(route.name);
+
+
 
 watch(() => route.name, (newRouteName) => {
 activeTab.value = newRouteName;
@@ -277,6 +320,18 @@ width: 100%;
 height: 100%;
 }
 
+.main-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-right: 5px; /* 增加 FACEID 和副标题之间的间距 */
+}
 
-
+.subtitle {
+  font-size: 20px;
+  color: #666666;
+}
+.title-section {
+  align-items: baseline;
+  gap: 211px; /* 增加标题和副标题之间的间距 */
+}
 </style>
