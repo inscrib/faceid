@@ -11,7 +11,7 @@ const client = createClient({
     couter
   },
   globalProviderConfig: {
-    host: 'http://ic0.app', // 替换为实际的 IC 网络地址
+    host: 'http://localhost:4943', // 替换为实际的 IC 网络地址
   },
 });
 </script>

@@ -31,8 +31,8 @@ v-model:value="activeTab"
        class="main-title"
         :size="28"
         :gradient="{
-         from: 'rgb(82, 36, 129)',
-         to: 'rgb(255, 132, 0)',
+         from: 'rgb(128, 0, 128)',
+         to: 'rgb(0, 255, 0)',
         }"
       >
         FACEID

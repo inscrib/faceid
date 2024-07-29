@@ -92,7 +92,7 @@ const model = ref({
   tokenStandard: null,
   validTargets: [],
   launchDate: null,
-  minSimilarity: 50,
+  minSimilarity: 20,
   attributes: [],
   description: null,
 });
@@ -157,7 +157,7 @@ const rules = {
       return value >= 0 && value <= 100;
     },
     trigger: ["blur", "change"],
-    message: "Minimum Similarity must be between 0 and 100",
+    message: "Minimum Difference must be less than 50",
   },
   description: {
     required: true,
@@ -170,8 +170,8 @@ const handleSubmit = (e) => {
   e.preventDefault();
   formRef.value?.validate((errors) => {
     if (!errors) {
-      message.success("Form submitted successfully");
-      console.log(model.value);
+      message.error("not available");
+
     } else {
       message.error("Please fix the errors in the form");
     }

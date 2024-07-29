@@ -280,13 +280,14 @@ export default {
         let label = sanitize(result.Ok.label);
         let score = Math.round(result.Ok.score * 100) / 100;
         message.success(`Identification results:${label}, similarity:${score}`);
+        current.value = 4;
       } catch (err) {
         message.error(err.toString());
       }
       showLoader.value = false;
       showRestart.value = true;
       showButtons.value = true;
-      current.value = 4;
+ 
     };
 
     const store = async () => {
@@ -313,6 +314,7 @@ export default {
         }
         message.success(`Successfully added ${label}。`);
         addButtonDisabled.value = true;
+        current.value = 3;
       } catch (err) {
         console.error(`Error：${err}`);
         message.error("Failed to add face:" + err.toString());
@@ -320,7 +322,6 @@ export default {
       showLoader.value = false;
       showRestart.value = true;
       showButtons.value = true;
-      current.value = 3;
     };
 
 

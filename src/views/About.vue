@@ -25,7 +25,7 @@
     </n-spin>
 </n-card>
 
-    <h1>ICP Query Dashboard</h1>
+    <h1> Query Dashboard</h1>
     <n-card title="Cycles Information">
       <n-space vertical>
         <n-statistic label="Current Cycles">
@@ -42,6 +42,13 @@
         <n-statistic label="Total Authorized Users">
           {{ totalUsers }}
         </n-statistic>
+        <n-progress
+    type="line"
+    :percentage="1"
+    indicator-placement="inside"
+    processing
+  />
+
         <n-button @click="getAuthorizedUsers" :loading="loadingUsers">
           Get Authorized Users
         </n-button>
