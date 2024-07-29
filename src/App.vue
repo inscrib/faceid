@@ -72,12 +72,55 @@ v-model:value="activeTab"
       </template>
       
       <div v-else class="disconnected-message">
-        <p>Please connect to use the app</p>
+        <n-result
+    status="info"
+    title="Login"
+    description="Please connect to use the app"
+  >
+  </n-result>
       </div>
+      <n-divider />   
+      <n-card title="Tips">
+  <n-collapse>
+    <n-collapse-item title="What should I do?" name="1">
+  <div>
+    1. Click on the Claim option.<br/>
+    2. Upload your face data and information. Note that once uploaded, you cannot add new information agein. <br/>
+    3. You can view your status in the About section.
+  </div>
+</n-collapse-item>
 
+<n-collapse-item title="When can I check my tokens?" name="2">
+  <div>
+    1. Claiming consists of two parts. After uploading your data, you need to use the recognition feature to claim your face ID.<br/>
+    2. Once successfully claimed, you cannt useing recognition again. Each person has up to 3 attempts.<br/>
+    3. Your token allocation depends on your score. Higher differences means more tokens! but a very high difference may lead to recognition failure.<br/>
+    4. When the process is complete and the number of claimed ppl reaches the target, the canisters will automatically distribute the faceid token balance.
+  </div>
+</n-collapse-item>
 
+<n-collapse-item title="What is the total amount of tokens and how are they distributed?" name="3">
+  <div>
+    1. The total amount of Face ID tokens is unlimited but depends on the number of test users.<br/>
+    2. All tokens are distributed to test users, approximately 500 people.<br/>
+    3. We are exploring a new anti-bot minting methods. This is just a test, so there may be issues. Do not deposit any balance into your account.
+  </div>
+</n-collapse-item>
 
+<n-collapse-item title="Is my data secure?" name="4">
+  <div>
+    Yes, your information is securely stored in the ICP canister. No one can access it, and it is only used wen verifying your information.
+  </div>
+</n-collapse-item>
 
+<n-collapse-item title="What are the next steps?" name="5">
+  <div>
+    We plan to implement a new distribution method that uses face recognition to ensure fair access to tokens for more ppl.
+  </div>
+</n-collapse-item>
+
+  </n-collapse>
+</n-card>
     </div>
   </n-layout-content>
 
