@@ -145,12 +145,17 @@
       const faceDetected = ref(false);
   
       const loadFaceApiModels = async () => {
-        const MODEL_URL = '/models';
-        await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
-        await faceapi.loadFaceLandmarkModel(MODEL_URL);
-        await faceapi.loadFaceRecognitionModel(MODEL_URL);
-        message.success("Face detection models loaded successfully");
-      };
+  const MODEL_URL = '/models';
+  try {
+    await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
+    await faceapi.loadFaceLandmarkModel(MODEL_URL);
+    await faceapi.loadFaceRecognitionModel(MODEL_URL);
+    message.success("Face detection models loaded successfully");
+  } catch (error) {
+    console.error('Error loading face-api.js models:', error);
+    message.error('Failed to load face detection models');
+  }
+};
   
       const detectFaces = async (image) => {
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks();
@@ -302,43 +307,39 @@
       reader.readAsDataURL(file.file);
     };
   
-    const restart = async () => {
+    restart: async () => {
   showRestart.value = false;
   showLoader.value = true;
 
   try {
-    // 1. 检查 getUserMedia 支持
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error('getUserMedia is not supported in this browser');
     }
 
-    // 2. 获取媒体流
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false,
     });
 
-    // 3. 检查 video 元素
     if (!video.value) {
       throw new Error('Video element not found');
     }
 
-    // 4. 设置视频源并播放
     video.value.srcObject = stream;
     await video.value.play();
 
-    // 5. 更新 UI 状态
+    console.log('Camera stream obtained successfully');
+
     showButtons.value = true;
     showVideo.value = true;
     showImage.value = false;
     showCanvas.value = true;
     addButtonDisabled.value = false;
 
-    // 6. 开始人脸检测循环
     detectFacesLoop();
   } catch (err) {
-    console.error(`An error occurred: ${err}`);
-    // 7. 错误处理
+    console.error(`An error occurred in restart: ${err.message}`);
+    message.error(`Failed to start camera: ${err.message}`);
     showImage.value = false;
     showButtons.value = true;
     showVideo.value = false;
@@ -349,21 +350,25 @@
   }
 };
 
+
 const detectFacesLoop = async () => {
   if (showVideo.value && video.value) {
-    const detections = await detectFaces(video.value);
-    if (detections.length > 0) {
-      drawDetections(detections);
-      faceDetected.value = true;
-    } else {
-      faceDetected.value = false;
-      const ctx = canvas.value.getContext('2d');
-      ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+    try {
+      const detections = await detectFaces(video.value);
+      if (detections.length > 0) {
+        drawDetections(detections);
+        faceDetected.value = true;
+      } else {
+        faceDetected.value = false;
+        const ctx = canvas.value.getContext('2d');
+        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+      }
+    } catch (error) {
+      console.error('Error in detectFacesLoop:', error);
     }
   }
   requestAnimationFrame(detectFacesLoop);
 };
-
   
       const sanitize = (name) => {
         return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
@@ -378,19 +383,23 @@ const detectFacesLoop = async () => {
       };
   
       onMounted(async () => {
-        await loadFaceApiModels();
-        restart();
-      });
+  await loadFaceApiModels();
+  if (video.value) {
+    restart();
+  } else {
+    console.error('Video element not found on mount');
+  }
+});
   
       watch(video, (newVideo) => {
-  if (newVideo) {
-    newVideo.oncanplay = () => {
-      showVideo.value = true;
-      showImage.value = false;
-      showCanvas.value = true;
-      canvas.value.width = newVideo.videoWidth;
-      canvas.value.height = newVideo.videoHeight;
-    };
+        if (newVideo) {
+          newVideo.oncanplay = () => {
+            showVideo.value = true;
+            showImage.value = false;
+            showCanvas.value = true;
+            canvas.value.width = newVideo.videoWidth;
+            canvas.value.height = newVideo.videoHeight;
+          };
         }
       });
   
