@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-3
+4
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -114,19 +114,6 @@
   import * as faceapi from 'face-api.js';
   
   export default {
-    name: "FaceRecognition",
-    components: {
-      NSpace,
-      NCard,
-      NButton,
-      NSpin,
-      NUpload,
-      NModal,
-      NDivider,
-      NSteps,
-      NStep,
-      NResult,
-    },
     setup() {
       const [counter] = useCanister("couter", { mode: "anonymous" });
       const message = useMessage();
@@ -164,12 +151,12 @@
         ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
         faceapi.draw.drawDetections(canvas.value, detections);
         faceapi.draw.drawFaceLandmarks(canvas.value, detections);
-      };
-  
-      const captureImage = async () => {
         if (current.value < 3) {
         current.value = 2;
       }
+      };
+  
+      const captureImage = async () => {
       try {
         let image = showVideo.value ? video.value : document.querySelector(".media");
         canvas.value.width = image.width || image.videoWidth;
@@ -310,17 +297,16 @@
   
         try {
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Error('getUserMedia is not supported in this browser');
+            message.warning('getUserMedia is not supported in this browser');
+            return;
           }
           const stream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "user" }
           });
-          stream = stream;
 
           if (!video.value) {
             throw new Error('Video element not found');
           }
-  
           video.value.srcObject = stream;
           await video.value.play();
   
