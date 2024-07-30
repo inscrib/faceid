@@ -143,18 +143,29 @@
       const current = ref(1);
       const currentStatus = ref("process");
       const faceDetected = ref(false);
-
-
-      
+  
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
-        message.loading("Face detection models are loaded...");
         await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
         await faceapi.loadFaceRecognitionModel(MODEL_URL);
         message.success("Face detection models loaded successfully");
+        await restart();
       };
-  
+
+      
+      const state = reactive({
+    netsLoadModel: true,
+    discernVideoEl: null,
+    discernCanvasEl: null,
+    timer: 0,
+    stream: null,
+  });
+
+
+
+
+
       const detectFaces = async (image) => {
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks();
         return detections;
@@ -308,21 +319,16 @@
       const restart = async () => {
         showRestart.value = false;
         showLoader.value = true;
-        const constraints = {
-  video: {
-    width: { ideal: 1280 },
-    height: { ideal: 720 }
-  },
-  audio: false
-};
+  
         try {
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Error('getUserMedia is not supported in this browser');
           }
-
-          const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-
+  
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+          });
   
           if (!video.value) {
             throw new Error('Video element not found');
@@ -380,7 +386,6 @@
   
       onMounted(async () => {
         await loadFaceApiModels();
-        restart();
       });
   
       watch(video, (newVideo) => {
