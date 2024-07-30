@@ -19,8 +19,8 @@
             description="View the recognition result"
           />
         </n-steps>
-  1
-        <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
+  
+        <div  class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
               v-if="showImage"
@@ -108,7 +108,7 @@
   </template>
   
   <script>
-  import { ref, onMounted, watch, nextTick } from "vue";
+  import { ref, onMounted, watch } from "vue";
   import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
   import { useCanister } from "@connect2ic/vue";
   import * as faceapi from 'face-api.js';
@@ -302,74 +302,46 @@
       reader.readAsDataURL(file.file);
     };
   
-    const restart = async () => {
-  console.log("Entering restart function");
-  showRestart.value = false;
-  showLoader.value = true;
-
-  try {
-    // 检查浏览器支持
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error('getUserMedia is not supported in this browser');
-    }
-
-    // 请求摄像头权限
-    console.log("Requesting camera permission...");
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false,
-    });
-    console.log("Camera permission granted, stream obtained");
-
-    // 检查视频元素是否存在
-    if (!video.value) {
-      throw new Error('Video element not found');
-    }
-
-    // 设置视频源并播放
-    video.value.srcObject = stream;
-    console.log("Video source set, attempting to play...");
-    
-    try {
-      await video.value.play();
-      console.log("Video playback started successfully");
-    } catch (playError) {
-      console.error("Error playing video:", playError);
-      throw new Error("Failed to start video playback");
-    }
-
-    // 更新UI状态
-    showButtons.value = true;
-    showVideo.value = true;
-    showImage.value = false;
-    showCanvas.value = true;
-    addButtonDisabled.value = false;
-
-    // 设置canvas尺寸
-    if (canvas.value) {
-      canvas.value.width = video.value.videoWidth;
-      canvas.value.height = video.value.videoHeight;
-      console.log(`Canvas size set to ${canvas.value.width}x${canvas.value.height}`);
-    } else {
-      console.warn("Canvas element not found, unable to set size");
-    }
-
-    // 开始人脸检测循环
-    console.log("Starting face detection loop");
-    detectFacesLoop();
-  } catch (err) {
-    console.error(`An error occurred in restart: ${err.message}`);
-    showImage.value = false;
-    showButtons.value = true;
-    showVideo.value = false;
-    showCanvas.value = false;
-    message.error(`Failed to start camera: ${err.message}`);
-    message.warning("Unable to launch camera, but you can upload photos");
-  } finally {
-    showLoader.value = false;
-    console.log("Exiting restart function");
-  }
-};
+      const restart = async () => {
+        showRestart.value = false;
+        showLoader.value = true;
+  
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error('getUserMedia is not supported in this browser');
+          }
+  
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+          });
+  
+          if (!video.value) {
+            throw new Error('Video element not found');
+          }
+  
+          video.value.srcObject = stream;
+          await video.value.play();
+  
+          showButtons.value = true;
+          showVideo.value = true;
+          showImage.value = false;
+          showCanvas.value = true;
+          addButtonDisabled.value = false;
+  
+          // Start face detection loop
+          detectFacesLoop();
+        } catch (err) {
+          console.error(`An error occurred: ${err}`);
+          showImage.value = false;
+          showButtons.value = true;
+          showVideo.value = false;
+          showCanvas.value = false;
+          message.warning("Unable to launch camera, but you can upload photos");
+        } finally {
+          showLoader.value = false;
+        }
+      };
   
       const detectFacesLoop = async () => {
         if (showVideo.value && video.value) {
@@ -399,39 +371,10 @@
       };
   
       onMounted(async () => {
-      await nextTick();
-      if (!video.value || !canvas.value) {
-        console.error('Video or canvas element not found after mounting');
-        return;
-      }
-      console.log('Video and canvas elements found:', video.value, canvas.value);
-      checkFunctionsLoaded();
-  await loadFaceApiModels();
-  restart();
-      restart();
+        await loadFaceApiModels();
+        restart();
       });
-      const checkFunctionsLoaded = () => {
-  const requiredFunctions = [
-    loadFaceApiModels,
-    detectFaces,
-    drawDetections,
-    captureImage,
-    recognize,
-    store,
-    handleFileChange,
-    restart,
-    detectFacesLoop
-  ];
-
-  requiredFunctions.forEach(func => {
-    if (typeof func !== 'function') {
-      console.error(`Required function not loaded: ${func.name}`);
-    } else {
-      console.log(`Function loaded successfully: ${func.name}`);
-    }
-  });
-};
-      
+  
       watch(video, (newVideo) => {
         if (newVideo) {
           newVideo.oncanplay = () => {
