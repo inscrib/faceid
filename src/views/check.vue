@@ -1,7 +1,7 @@
 <template>
     <div class="page">
-      <div class="page_load" v-show="state.netsLoadModel">Load Model...</div>
-      <div class="page_draw" v-show="!state.netsLoadModel">
+      <div class="page_load" >Load Model...</div>
+      <div class="page_draw" >
         <h3>人脸检测：</h3>
         <div class="media-container" >
             <video
