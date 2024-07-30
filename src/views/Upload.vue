@@ -302,61 +302,68 @@
       reader.readAsDataURL(file.file);
     };
   
-      const restart = async () => {
-        showRestart.value = false;
-        showLoader.value = true;
-  
-        try {
-          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Error('getUserMedia is not supported in this browser');
-          }
-  
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
-          });
-  
-          if (!video.value) {
-            throw new Error('Video element not found');
-          }
-  
-          video.value.srcObject = stream;
-          await video.value.play();
-  
-          showButtons.value = true;
-          showVideo.value = true;
-          showImage.value = false;
-          showCanvas.value = true;
-          addButtonDisabled.value = false;
-  
-          // Start face detection loop
-          detectFacesLoop();
-        } catch (err) {
-          console.error(`An error occurred: ${err}`);
-          showImage.value = false;
-          showButtons.value = true;
-          showVideo.value = false;
-          showCanvas.value = false;
-          message.warning("Unable to launch camera, but you can upload photos");
-        } finally {
-          showLoader.value = false;
-        }
-      };
-  
-      const detectFacesLoop = async () => {
-        if (showVideo.value && video.value) {
-          const detections = await detectFaces(video.value);
-          if (detections.length > 0) {
-            drawDetections(detections);
-            faceDetected.value = true;
-          } else {
-            faceDetected.value = false;
-            const ctx = canvas.value.getContext('2d');
-            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
-          }
-        }
-        requestAnimationFrame(detectFacesLoop);
-      };
+    const restart = async () => {
+  showRestart.value = false;
+  showLoader.value = true;
+
+  try {
+    // 1. 检查 getUserMedia 支持
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('getUserMedia is not supported in this browser');
+    }
+
+    // 2. 获取媒体流
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false,
+    });
+
+    // 3. 检查 video 元素
+    if (!video.value) {
+      throw new Error('Video element not found');
+    }
+
+    // 4. 设置视频源并播放
+    video.value.srcObject = stream;
+    await video.value.play();
+
+    // 5. 更新 UI 状态
+    showButtons.value = true;
+    showVideo.value = true;
+    showImage.value = false;
+    showCanvas.value = true;
+    addButtonDisabled.value = false;
+
+    // 6. 开始人脸检测循环
+    detectFacesLoop();
+  } catch (err) {
+    console.error(`An error occurred: ${err}`);
+    // 7. 错误处理
+    showImage.value = false;
+    showButtons.value = true;
+    showVideo.value = false;
+    showCanvas.value = false;
+    message.warning("Unable to launch camera, but you can upload photos");
+  } finally {
+    showLoader.value = false;
+  }
+};
+
+const detectFacesLoop = async () => {
+  if (showVideo.value && video.value) {
+    const detections = await detectFaces(video.value);
+    if (detections.length > 0) {
+      drawDetections(detections);
+      faceDetected.value = true;
+    } else {
+      faceDetected.value = false;
+      const ctx = canvas.value.getContext('2d');
+      ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+    }
+  }
+  requestAnimationFrame(detectFacesLoop);
+};
+
   
       const sanitize = (name) => {
         return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
@@ -376,14 +383,14 @@
       });
   
       watch(video, (newVideo) => {
-        if (newVideo) {
-          newVideo.oncanplay = () => {
-            showVideo.value = true;
-            showImage.value = false;
-            showCanvas.value = true;
-            canvas.value.width = newVideo.videoWidth;
-            canvas.value.height = newVideo.videoHeight;
-          };
+  if (newVideo) {
+    newVideo.oncanplay = () => {
+      showVideo.value = true;
+      showImage.value = false;
+      showCanvas.value = true;
+      canvas.value.width = newVideo.videoWidth;
+      canvas.value.height = newVideo.videoHeight;
+    };
         }
       });
   
