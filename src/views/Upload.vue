@@ -144,13 +144,7 @@
       const currentStatus = ref("process");
       const faceDetected = ref(false);
 
-      const constraints = {
-  video: {
-    width: { ideal: 1280 },
-    height: { ideal: 720 }
-  },
-  audio: false
-};
+
       
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
@@ -313,16 +307,21 @@
       const restart = async () => {
         showRestart.value = false;
         showLoader.value = true;
-  
+        const constraints = {
+  video: {
+    width: { ideal: 1280 },
+    height: { ideal: 720 }
+  },
+  audio: false
+};
         try {
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Error('getUserMedia is not supported in this browser');
           }
-          const stream = await navigator.mediaDevices.getUserMedia(constraints)
-          .then(stream => {
-            video: true,
-            audio: false,
-          });
+
+          const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+
   
           if (!video.value) {
             throw new Error('Video element not found');
