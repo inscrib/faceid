@@ -4,14 +4,21 @@
       <div class="page_draw" v-show="!state.netsLoadModel">
         <h3>人脸检测：</h3>
         <div class="page_draw-discern">
-          <video
+            <video
             id="page_draw-video"
             poster="/images/720x480.png"
             muted
-            playsinline
-          ></video>
-          <canvas id="page_draw-video-canvas"></canvas>
+              ref="video"
+              playsinline
+              class="media"
+            ></video>
+            <canvas
+             id="page_draw-video-canvas"
+              ref="canvas"
+              class="media"
+            ></canvas>
         </div>
+    
       </div>
     </div>
   </template>
@@ -122,26 +129,42 @@
   </script>
   
   <style scoped>
-  .page_draw-discern {
+  .main-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .media-container {
     position: relative;
     width: 100%;
-    max-width: 100%;
-    height: auto;
+    height: 0;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
     overflow: hidden;
   }
   
-  #page_draw-video,
-  #page_draw-video-canvas {
+  .media {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
-    object-fit: contain; /* 保持视频内容不变形，并适应父容器 */
+    height: 100%;
+    object-fit: contain;
   }
   
-  @media (max-width: 600px) {
-    .page_draw-discern {
-      width: 100%;
-    }
+  .loader-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
+  
+  .process-step {
+    margin-top: 1rem;
+  }
+
+  .white-background {
+  background-color: white;
+  border: 1px solid #e0e0e0; /* Optional: adds a light border for better visibility */
+}
   </style>
   
