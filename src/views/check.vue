@@ -38,7 +38,9 @@ async function fnLoadModel() {
   state.discernVideoEl = document.getElementById("page_draw-video");
   state.discernCanvasEl = document.getElementById("page_draw-video-canvas");
 
-  state.netsLoadModel = false;
+    state.netsLoadModel = false;
+    await fnOpen();
+
 }
 
 async function fnRedrawDiscern() {
@@ -113,7 +115,6 @@ function fnClose() {
 
 onMounted(() => {
     fnLoadModel();
-    fnOpen();
 });
 
 onUnmounted(() => {
