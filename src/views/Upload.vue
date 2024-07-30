@@ -29,9 +29,8 @@
               class="media"
             />
             <video
-            id="page_draw-video"
               v-if="showVideo"
-              :ref="video"
+              ref="video"
               playsinline
               class="media"
             ></video>
@@ -69,7 +68,6 @@
               class="media"
             />
             <video
-            id="page_draw-video"
               v-if="showVideo"
               ref="video"
               playsinline
@@ -110,7 +108,7 @@
   </template>
   
   <script>
-  import { ref, onMounted, watch } from "vue";
+  import { ref, onMounted,onMounted, watch } from "vue";
   import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
   import { useCanister } from "@connect2ic/vue";
   import * as faceapi from 'face-api.js';
@@ -132,16 +130,13 @@
       const current = ref(1);
       const currentStatus = ref("process");
       const faceDetected = ref(false);
-
-      let discernVideoEl = null;
-
+  
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
         await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
         await faceapi.loadFaceRecognitionModel(MODEL_URL);
         message.success("Face detection models loaded successfully");
-        discernVideoEl = document.getElementById("page_draw-video");
 
       };
   
@@ -225,7 +220,6 @@
       } finally {
         showLoader.value = false;
         showRestart.value = true;
-        showButtons.value = true;
       }
     };
 
@@ -298,7 +292,7 @@
       const restart = async () => {
         showRestart.value = false;
         showLoader.value = true;
-  
+        showButtons.value = false;
         try {
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             message.warning('getUserMedia is not supported in this browser');
@@ -309,10 +303,11 @@
           });
           message.info("1");
 
-      discernVideoEl.srcObject = stream;
+
+          video.value.srcObject = stream;
           message.info("3");
 
-          await discernVideoEl.play();
+          await video.value.play();
           message.info("4");
 
           showButtons.value = true;
@@ -335,21 +330,25 @@
           showLoader.value = false;
         }
       };
-  
+      const isComponentMounted = ref(true);
+ 
       const detectFacesLoop = async () => {
-        if (showVideo.value && video.value) {
-          const detections = await detectFaces(video.value);
-          if (detections.length > 0) {
-            drawDetections(detections);
-            faceDetected.value = true;
-          } else {
-            faceDetected.value = false;
-            const ctx = canvas.value.getContext('2d');
-            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
-          }
-        }
-        requestAnimationFrame(detectFacesLoop);
-      };
+  if (!isComponentMounted.value) return;
+
+  if (showVideo.value && video.value) {
+    const detections = await detectFaces(video.value);
+    if (detections.length > 0) {
+      drawDetections(detections);
+      faceDetected.value = true;
+    } else {
+      faceDetected.value = false;
+      const ctx = canvas.value.getContext('2d');
+      ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+    }
+  }
+  requestAnimationFrame(detectFacesLoop);
+};
+
   
       const sanitize = (name) => {
         return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
@@ -366,8 +365,13 @@
       onMounted(async () => {
         await loadFaceApiModels();
         await restart();
-
       });
+
+      onUnmounted(() => {
+  isComponentMounted.value = false;
+});
+
+
   
       watch(video, (newVideo) => {
         if (newVideo) {
