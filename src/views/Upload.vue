@@ -165,6 +165,9 @@
       };
   
       const captureImage = async () => {
+        if (current.value < 3) {
+        current.value = 2;
+      }
       try {
         let image = showVideo.value ? video.value : document.querySelector(".media");
         canvas.value.width = image.width || image.videoWidth;
@@ -296,9 +299,6 @@
         };
         img.src = e.target.result;
       };
-      if (current.value < 3) {
-        current.value = 2;
-      }
       reader.readAsDataURL(file.file);
     };
   
@@ -310,12 +310,11 @@
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Error('getUserMedia is not supported in this browser');
           }
-  
           const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
+            video: { facingMode: "user" }
           });
-  
+          stream = stream;
+
           if (!video.value) {
             throw new Error('Video element not found');
           }
