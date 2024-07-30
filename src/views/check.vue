@@ -22,18 +22,15 @@
       </div>
     </div>
   </template>
-  
   <script setup>
   import * as faceapi from 'face-api.js';
-  import { onMounted, onUnmounted, reactive } from "vue";
+  import { onMounted, onUnmounted } from "vue";
   
-  const state = reactive({
-    netsLoadModel: true,
-    discernVideoEl: null,
-    discernCanvasEl: null,
-    timer: 0,
-    stream: null,
-  });
+  let netsLoadModel = true;
+  let discernVideoEl = null;
+  let discernCanvasEl = null;
+  let timer = 0;
+  let stream = null;
   
   async function fnLoadModel() {
     const modelsPath = '/models';
@@ -41,80 +38,80 @@
     await faceapi.nets.faceLandmark68Net.load(modelsPath);
     await faceapi.nets.faceRecognitionNet.load(modelsPath);
   
-    state.discernVideoEl = document.getElementById("page_draw-video");
-    state.discernCanvasEl = document.getElementById("page_draw-video-canvas");
+    discernVideoEl = document.getElementById("page_draw-video");
+    discernCanvasEl = document.getElementById("page_draw-video-canvas");
   
-    state.netsLoadModel = false;
+    netsLoadModel = false;
     await fnOpen();
     await fnRedrawDiscern();
   }
   
   async function fnRedrawDiscern() {
-    if (state.discernVideoEl.paused) {
-      clearTimeout(state.timer);
-      state.timer = 0;
+    if (discernVideoEl.paused) {
+      clearTimeout(timer);
+      timer = 0;
       return;
     }
   
     const detect = await faceapi
-      .detectAllFaces(state.discernVideoEl, new faceapi.TinyFaceDetectorOptions())
+      .detectAllFaces(discernVideoEl, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks()
       .withFaceDescriptors();
   
     if (!detect) {
-      clearTimeout(state.timer);
-      state.timer = 0;
+      clearTimeout(timer);
+      timer = 0;
       fnRedrawDiscern();
       return;
     }
   
     const dims = faceapi.matchDimensions(
-      state.discernCanvasEl,
-      state.discernVideoEl,
+      discernCanvasEl,
+      discernVideoEl,
       true
     );
     const resizedResults = faceapi.resizeResults(detect, dims);
-    
-    faceapi.draw.drawDetections(state.discernCanvasEl, resizedResults);
-    faceapi.draw.drawFaceLandmarks(state.discernCanvasEl, resizedResults);
   
-    state.timer = setTimeout(() => fnRedrawDiscern(), 0);
+    faceapi.draw.drawDetections(discernCanvasEl, resizedResults);
+    faceapi.draw.drawFaceLandmarks(discernCanvasEl, resizedResults);
+  
+    timer = setTimeout(() => fnRedrawDiscern(), 0);
   }
   
   async function fnOpen() {
-    if (state.stream !== null) return;
+    if (stream !== null) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" }
       });
-      state.stream = stream;
-      state.discernVideoEl.srcObject = stream;
-      state.discernVideoEl.play();
+      stream = stream;
+      discernVideoEl.srcObject = stream;
+      discernVideoEl.play();
       setTimeout(() => fnRedrawDiscern(), 300);
     } catch (error) {
-      state.stream = null;
+      stream = null;
       console.error(error);
       alert("视频媒体流获取错误: " + error);
     }
   }
   
   function fnClose() {
-    if (state.stream === null) return;
-    state.discernVideoEl.pause();
-    state.discernVideoEl.srcObject = null;
-    state.stream.getTracks().forEach((track) => track.stop());
-    state.stream = null;
-    clearTimeout(state.timer);
-    state.timer = 0;
+    if (stream === null) return;
+    discernVideoEl.pause();
+    discernVideoEl.srcObject = null;
+    stream.getTracks().forEach((track) => track.stop());
+    stream = null;
+    clearTimeout(timer);
+    timer = 0;
   
     setTimeout(() => {
-      state.discernCanvasEl
+      discernCanvasEl
         .getContext("2d")
         .clearRect(
           0,
           0,
-          state.discernCanvasEl.width,
-          state.discernCanvasEl.height
+          discernCanvasEl.width,
+          discernCanvasEl.height
         );
     }, 500);
   }
@@ -127,6 +124,7 @@
     fnClose();
   });
   </script>
+  
   
   <style scoped>
   .main-container {
