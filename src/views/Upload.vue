@@ -303,19 +303,26 @@
           const stream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "user" }
           });
+          message.info("1");
 
           if (!video.value) {
             throw new Error('Video element not found');
           }
+          message.info("2");
+
           video.value.srcObject = stream;
+          message.info("3");
+
           await video.value.play();
-  
+          message.info("4");
+
           showButtons.value = true;
           showVideo.value = true;
           showImage.value = false;
           showCanvas.value = true;
           addButtonDisabled.value = false;
-  
+          message.info("5");
+
           // Start face detection loop
           detectFacesLoop();
         } catch (err) {
