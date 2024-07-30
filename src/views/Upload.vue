@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-  1
+2
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -150,6 +150,8 @@
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
         await faceapi.loadFaceRecognitionModel(MODEL_URL);
         message.success("Face detection models loaded successfully");
+        await restart();
+
       };
   
       const detectFaces = async (image) => {
@@ -371,7 +373,6 @@
   
       onMounted(async () => {
         await loadFaceApiModels();
-        restart();
       });
   
       watch(video, (newVideo) => {
