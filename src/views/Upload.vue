@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-10
+4
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -29,8 +29,9 @@
               class="media"
             />
             <video
+            id="page_draw-video"
               v-if="showVideo"
-              ref="videoRef"
+              :ref="video"
               playsinline
               class="media"
             ></video>
@@ -68,8 +69,9 @@
               class="media"
             />
             <video
+            id="page_draw-video"
               v-if="showVideo"
-              ref="videoRef"
+              ref="video"
               playsinline
               class="media"
             ></video>
@@ -117,10 +119,10 @@
     setup() {
       const [counter] = useCanister("couter", { mode: "anonymous" });
       const message = useMessage();
-      const videoRef = ref(null);
+      const video = ref(null);
       const canvas = ref(null);
       const imageSrc = ref(""); 
-      const showVideo = ref(true);
+      const showVideo = ref(false);
       const showImage = ref(false);
       const showCanvas = ref(false);
       const showLoader = ref(false);
@@ -130,15 +132,16 @@
       const current = ref(1);
       const currentStatus = ref("process");
       const faceDetected = ref(false);
-  
-  
+
+      let discernVideoEl = null;
+
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
         await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
         await faceapi.loadFaceRecognitionModel(MODEL_URL);
         message.success("Face detection models loaded successfully");
-        await restart();
+        discernVideoEl = document.getElementById("page_draw-video");
 
       };
   
@@ -294,9 +297,8 @@
   
       const restart = async () => {
         showRestart.value = false;
-      showLoader.value = true;
-      showVideo.value = true;
-      showImage.value = false;
+        showLoader.value = true;
+  
         try {
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             message.warning('getUserMedia is not supported in this browser');
@@ -307,27 +309,30 @@
           });
           message.info("1");
 
-          videoRef.value.srcObject = stream;
+      discernVideoEl.srcObject = stream;
           message.info("3");
 
-          await video.value.play();
+          await discernVideoEl.play();
           message.info("4");
 
           showButtons.value = true;
-        showCanvas.value = true;
-        addButtonDisabled.value = false;
+          showVideo.value = true;
+          showImage.value = false;
+          showCanvas.value = true;
+          addButtonDisabled.value = false;
           message.info("5");
 
           // Start face detection loop
           detectFacesLoop();
         } catch (err) {
           console.error(`An error occurred: ${err}`);
-          showImage.value = true;
+          showImage.value = false;
+          showButtons.value = true;
           showVideo.value = false;
+          showCanvas.value = false;
           message.warning("Unable to launch camera, but you can upload photos");
         } finally {
           showLoader.value = false;
-          showButtons.value = true;
         }
       };
   
@@ -360,6 +365,8 @@
   
       onMounted(async () => {
         await loadFaceApiModels();
+        await restart();
+
       });
   
       watch(video, (newVideo) => {
@@ -378,7 +385,7 @@
         refreshPage,
         current,
         currentStatus,
-        videoRef,
+        video,
         canvas,
         imageSrc,
         showVideo,
