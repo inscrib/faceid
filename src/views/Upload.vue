@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-  
+  2
         <div  class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -108,7 +108,7 @@
   </template>
   
   <script>
-  import { ref, onMounted, watch } from "vue";
+  import { ref, onMounted, watch,reactive } from "vue";
   import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
   import { useCanister } from "@connect2ic/vue";
   import * as faceapi from 'face-api.js';
@@ -143,7 +143,20 @@
       const current = ref(1);
       const currentStatus = ref("process");
       const faceDetected = ref(false);
-  
+
+
+      const stream = ref(null);
+    const constraints = reactive({
+      audio: false,
+      video: {
+        width: { min: 320, ideal: 720, max: 1280 },
+        height: { min: 200, ideal: 480, max: 720 },
+        frameRate: { min: 7, ideal: 15, max: 30 },
+        facingMode: "environment"
+      }
+    });
+
+      
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
         await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
@@ -152,7 +165,7 @@
         message.success("Face detection models loaded successfully");
       };
   
-      const detectFaces = async (image) => {
+      const detectFaces = async (videoEl) => {
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks();
         return detections;
       };
@@ -302,62 +315,80 @@
       reader.readAsDataURL(file.file);
     };
   
-      const restart = async () => {
-        showRestart.value = false;
-        showLoader.value = true;
-  
-        try {
-          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Error('getUserMedia is not supported in this browser');
-          }
-  
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
-          });
-  
-          if (!video.value) {
-            throw new Error('Video element not found');
-          }
-  
-          video.value.srcObject = stream;
-          await video.value.play();
-  
-          showButtons.value = true;
-          showVideo.value = true;
-          showImage.value = false;
-          showCanvas.value = true;
-          addButtonDisabled.value = false;
-  
-          // Start face detection loop
-          detectFacesLoop();
-        } catch (err) {
-          console.error(`An error occurred: ${err}`);
-          showImage.value = false;
-          showButtons.value = true;
-          showVideo.value = false;
-          showCanvas.value = false;
-          message.warning("Unable to launch camera, but you can upload photos");
-        } finally {
-          showLoader.value = false;
+    const restart = async () => {
+      if (stream.value !== null) return;
+      showLoader.value = true;
+      try {
+        stream.value = {}; // 避免重复点击
+        const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+        stream.value = mediaStream;
+        if (!video.value) {
+          throw new Error('Video element not found');
         }
-      };
-  
-      const detectFacesLoop = async () => {
-        if (showVideo.value && video.value) {
+        video.value.srcObject = mediaStream;
+        await video.value.play();
+        
+        showVideo.value = true;
+        showCanvas.value = true;
+
+        // 延迟开始人脸检测，给视频一些时间来初始化
+        setTimeout(() => detectFacesLoop(), 300);
+      } catch (err) {
+        stream.value = null; // 允许重试
+        console.error(`Camera error: ${err}`);
+        message.error(`Unable to launch camera: ${err.toString()}`);
+        showVideo.value = false;
+        showCanvas.value = false;
+      } finally {
+        showLoader.value = false;
+      }
+    };
+
+    const close = () => {
+      if (!stream.value) return;
+      if (video.value) {
+        video.value.pause();
+        video.value.srcObject = null;
+      }
+      stream.value.getTracks().forEach((track) => track.stop());
+      stream.value = null;
+      
+      // 清空画布
+      setTimeout(() => {
+        if (canvas.value) {
+          const ctx = canvas.value.getContext('2d');
+          ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+        }
+      }, 500);
+      
+      showVideo.value = false;
+      showCanvas.value = false;
+    };
+
+
+const detectFacesLoop = async () => {
+      if (showVideo.value && video.value && stream.value) {
+        try {
           const detections = await detectFaces(video.value);
           if (detections.length > 0) {
             drawDetections(detections);
             faceDetected.value = true;
           } else {
             faceDetected.value = false;
-            const ctx = canvas.value.getContext('2d');
-            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+            if (canvas.value) {
+              const ctx = canvas.value.getContext('2d');
+              ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+            }
           }
+        } catch (err) {
+          console.error(`Face detection error: ${err}`);
         }
+      }
+      if (stream.value) {
         requestAnimationFrame(detectFacesLoop);
-      };
-  
+      }
+    };
+
       const sanitize = (name) => {
         return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
       };
@@ -374,6 +405,8 @@
         await loadFaceApiModels();
         restart();
       });
+
+
   
       watch(video, (newVideo) => {
         if (newVideo) {
@@ -386,7 +419,7 @@
           };
         }
       });
-  
+
       return {
         refreshPage,
         current,
@@ -406,6 +439,7 @@
         handleFileChange,
         restart,
         faceDetected,
+        close,
       };
     },
   };
