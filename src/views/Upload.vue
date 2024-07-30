@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-5
+6
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -294,7 +294,7 @@
       const restart = async () => {
         showRestart.value = false;
         showLoader.value = true;
-  
+        showVideo.value = true;
         try {
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             message.warning('getUserMedia is not supported in this browser');
