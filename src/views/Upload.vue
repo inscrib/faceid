@@ -305,11 +305,6 @@
           });
           message.info("1");
 
-          if (!video.value) {
-            throw new Error('Video element not found');
-          }
-          message.info("2");
-
           video.value.srcObject = stream;
           message.info("3");
 

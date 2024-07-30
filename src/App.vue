@@ -72,7 +72,6 @@ v-model:value="activeTab"
   >
   </n-result>
   <n-divider />   
-
   <connect-button class="large-button" />
   <connect-dialog />
 </template>
