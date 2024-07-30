@@ -124,23 +124,24 @@
   <style scoped>
   .page_draw-discern {
     position: relative;
-    width: 720px; /* 确保宽度与视频尺寸一致 */
-    height: 480px; /* 确保高度与视频尺寸一致 */
-  }
-  
-  #page_draw-video {
-    position: absolute;
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* 保持视频内容不变形 */
+    max-width: 100%;
+    height: auto;
+    overflow: hidden;
   }
   
+  #page_draw-video,
   #page_draw-video-canvas {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
+    height: auto;
+    object-fit: contain; /* 保持视频内容不变形，并适应父容器 */
+  }
+  
+  @media (max-width: 600px) {
+    .page_draw-discern {
+      width: 100%;
+    }
   }
   </style>
   
