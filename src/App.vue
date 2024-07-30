@@ -52,7 +52,8 @@ v-model:value="activeTab"
       <n-tab-pane name="Upload" tab="Upload" />
       <n-tab-pane name="About" tab="About" />
       <n-tab-pane name="test" tab="Test" />
-    </n-tabs>
+  </n-tabs>
+
     </div>
   </n-layout-header>
 
@@ -60,24 +61,30 @@ v-model:value="activeTab"
 
 <n-layout-content class="main-content">
     <div class="content-wrapper">
-      <connect-button class="large-button" />
-      <connect-dialog />
-      
-      <template v-if="isConnected">
-        <div class="connected-content">
-          <p>Connected with principal: {{ principal }}</p>
-          <p>Active provider: {{ activeProvider?.meta.name }}</p>
-        </div>
-        <router-view></router-view>
-      </template>
-      
-      <div v-else class="disconnected-message">
+      <template v-if="!isConnected">
+
         <n-result
     status="info"
     title="Login"
     description="Please connect to use the app"
   >
   </n-result>
+  <n-divider />   
+
+  <connect-button class="large-button" />
+  <connect-dialog />
+</template>
+      
+      <div v-else class="disconnected-message">
+        <div class="connected-content">
+          <p>Connected with principal: {{ principal }}</p>
+          <p>Active provider: {{ activeProvider?.meta.name }}</p>
+          <n-divider />   
+
+          <router-view></router-view>
+
+        </div>
+
       </div>
       <n-divider />   
       <n-card title="Tips">
@@ -133,15 +140,30 @@ v-model:value="activeTab"
 </footer>
 </div>
 </div>
-<div class="theme-switcher">
-<n-switch
-v-model:value="isDarkTheme"
-@update:value="handleThemeChange"
->
-<template #checked>Dark</template>
-<template #unchecked>Light</template>
-</n-switch>
-</div>
+
+  <div class="theme-switcher">
+    <n-button
+      @click="disconnect"
+      round
+      type="primary"
+      size="small"
+      ghost
+      v-if="isConnected"
+    >
+      Disconnect
+    </n-button>
+    <n-switch
+      v-model:value="isDarkTheme"
+      @update:value="handleThemeChange"
+      round
+      size="large"
+    >
+      <template #checked>Dark</template>
+      <template #unchecked>Light</template>
+    </n-switch>
+  </div>
+
+
 </n-dialog-provider>
 </n-message-provider>
 </n-config-provider>
@@ -165,7 +187,7 @@ darkTheme as naiveDarkTheme,
 
 import { ConnectButton, ConnectDialog, useConnect } from "@connect2ic/vue";
 require('@connect2ic/core/style.css');
-const { isConnected, principal, activeProvider } = useConnect({
+const { isConnected,disconnect, principal,activeProvider } = useConnect({
   onConnect: () => {
     console.log("Signed in");
   },
@@ -173,7 +195,6 @@ const { isConnected, principal, activeProvider } = useConnect({
     console.log("Signed out");
   }
 });
-
 
 
 const router = useRouter();
@@ -259,16 +280,25 @@ padding: 20px;
 
 
 .theme-switcher {
-position: fixed;
-right: 20px;
-bottom: 20px;
-background-color: rgba(255, 255, 255, 0.3);
-padding: 10px;
-border-radius: 20px;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-z-index: 1000;
-transition: all 0.3s ease;
+  position: fixed;
+  gap: 16px; /* 间距 */
+  right: 20px;
+  bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
 }
+
+.theme-switcher n-button,
+.theme-switcher n-switch {
+  margin-right: 8px; /* 可选的额外间距 */
+}
+
 
 .dark-theme {
 background: rgba(0, 0, 0, 0.5);
