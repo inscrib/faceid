@@ -324,25 +324,18 @@
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Error('getUserMedia is not supported in this browser');
           }
-  
           const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
+        video: { facingMode: "user" },
+        audio: false,
           });
-  
-          if (!video.value) {
-            throw new Error('Video element not found');
-          }
-  
+          stream = stream;
           video.value.srcObject = stream;
           await video.value.play();
-  
           showButtons.value = true;
           showVideo.value = true;
           showImage.value = false;
           showCanvas.value = true;
           addButtonDisabled.value = false;
-  
           // Start face detection loop
           detectFacesLoop();
         } catch (err) {
