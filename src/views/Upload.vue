@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-4
+5
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
