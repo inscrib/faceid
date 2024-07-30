@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-  
+  1
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -108,7 +108,7 @@
   </template>
   
   <script>
-  import { ref, onMounted, watch } from "vue";
+  import { ref, onMounted, watch, nextTick } from "vue";
   import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
   import { useCanister } from "@connect2ic/vue";
   import * as faceapi from 'face-api.js';
@@ -145,17 +145,12 @@
       const faceDetected = ref(false);
   
       const loadFaceApiModels = async () => {
-  const MODEL_URL = '/models';
-  try {
-    await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
-    await faceapi.loadFaceLandmarkModel(MODEL_URL);
-    await faceapi.loadFaceRecognitionModel(MODEL_URL);
-    message.success("Face detection models loaded successfully");
-  } catch (error) {
-    console.error('Error loading face-api.js models:', error);
-    message.error('Failed to load face detection models');
-  }
-};
+        const MODEL_URL = '/models';
+        await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
+        await faceapi.loadFaceLandmarkModel(MODEL_URL);
+        await faceapi.loadFaceRecognitionModel(MODEL_URL);
+        message.success("Face detection models loaded successfully");
+      };
   
       const detectFaces = async (image) => {
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks();
@@ -307,68 +302,89 @@
       reader.readAsDataURL(file.file);
     };
   
-    restart: async () => {
+    const restart = async () => {
+  console.log("Entering restart function");
   showRestart.value = false;
   showLoader.value = true;
 
   try {
+    // 检查浏览器支持
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       throw new Error('getUserMedia is not supported in this browser');
     }
 
+    // 请求摄像头权限
+    console.log("Requesting camera permission...");
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false,
     });
+    console.log("Camera permission granted, stream obtained");
 
+    // 检查视频元素是否存在
     if (!video.value) {
       throw new Error('Video element not found');
     }
 
+    // 设置视频源并播放
     video.value.srcObject = stream;
-    await video.value.play();
+    console.log("Video source set, attempting to play...");
+    
+    try {
+      await video.value.play();
+      console.log("Video playback started successfully");
+    } catch (playError) {
+      console.error("Error playing video:", playError);
+      throw new Error("Failed to start video playback");
+    }
 
-    console.log('Camera stream obtained successfully');
-
+    // 更新UI状态
     showButtons.value = true;
     showVideo.value = true;
     showImage.value = false;
     showCanvas.value = true;
     addButtonDisabled.value = false;
 
+    // 设置canvas尺寸
+    if (canvas.value) {
+      canvas.value.width = video.value.videoWidth;
+      canvas.value.height = video.value.videoHeight;
+      console.log(`Canvas size set to ${canvas.value.width}x${canvas.value.height}`);
+    } else {
+      console.warn("Canvas element not found, unable to set size");
+    }
+
+    // 开始人脸检测循环
+    console.log("Starting face detection loop");
     detectFacesLoop();
   } catch (err) {
     console.error(`An error occurred in restart: ${err.message}`);
-    message.error(`Failed to start camera: ${err.message}`);
     showImage.value = false;
     showButtons.value = true;
     showVideo.value = false;
     showCanvas.value = false;
+    message.error(`Failed to start camera: ${err.message}`);
     message.warning("Unable to launch camera, but you can upload photos");
   } finally {
     showLoader.value = false;
+    console.log("Exiting restart function");
   }
 };
-
-
-const detectFacesLoop = async () => {
-  if (showVideo.value && video.value) {
-    try {
-      const detections = await detectFaces(video.value);
-      if (detections.length > 0) {
-        drawDetections(detections);
-        faceDetected.value = true;
-      } else {
-        faceDetected.value = false;
-        const ctx = canvas.value.getContext('2d');
-        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
-      }
-    } catch (error) {
-      console.error('Error in detectFacesLoop:', error);
-    }
-  }
-  requestAnimationFrame(detectFacesLoop);
-};
+  
+      const detectFacesLoop = async () => {
+        if (showVideo.value && video.value) {
+          const detections = await detectFaces(video.value);
+          if (detections.length > 0) {
+            drawDetections(detections);
+            faceDetected.value = true;
+          } else {
+            faceDetected.value = false;
+            const ctx = canvas.value.getContext('2d');
+            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+          }
+        }
+        requestAnimationFrame(detectFacesLoop);
+      };
   
       const sanitize = (name) => {
         return name.match(/[\p{L}\p{N}\s_-]/gu).join("");
@@ -383,14 +399,39 @@ const detectFacesLoop = async () => {
       };
   
       onMounted(async () => {
+      await nextTick();
+      if (!video.value || !canvas.value) {
+        console.error('Video or canvas element not found after mounting');
+        return;
+      }
+      console.log('Video and canvas elements found:', video.value, canvas.value);
+      checkFunctionsLoaded();
   await loadFaceApiModels();
-  if (video.value) {
-    restart();
-  } else {
-    console.error('Video element not found on mount');
-  }
-});
-  
+  restart();
+      restart();
+      });
+      const checkFunctionsLoaded = () => {
+  const requiredFunctions = [
+    loadFaceApiModels,
+    detectFaces,
+    drawDetections,
+    captureImage,
+    recognize,
+    store,
+    handleFileChange,
+    restart,
+    detectFacesLoop
+  ];
+
+  requiredFunctions.forEach(func => {
+    if (typeof func !== 'function') {
+      console.error(`Required function not loaded: ${func.name}`);
+    } else {
+      console.log(`Function loaded successfully: ${func.name}`);
+    }
+  });
+};
+      
       watch(video, (newVideo) => {
         if (newVideo) {
           newVideo.oncanplay = () => {
