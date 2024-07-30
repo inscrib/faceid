@@ -150,22 +150,8 @@
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
         await faceapi.loadFaceRecognitionModel(MODEL_URL);
         message.success("Face detection models loaded successfully");
-        await restart();
       };
-
-      
-      const state = reactive({
-    netsLoadModel: true,
-    discernVideoEl: null,
-    discernCanvasEl: null,
-    timer: 0,
-    stream: null,
-  });
-
-
-
-
-
+  
       const detectFaces = async (image) => {
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks();
         return detections;
@@ -324,18 +310,25 @@
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Error('getUserMedia is not supported in this browser');
           }
+  
           const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: false,
+            video: true,
+            audio: false,
           });
-          stream = stream;
+  
+          if (!video.value) {
+            throw new Error('Video element not found');
+          }
+  
           video.value.srcObject = stream;
           await video.value.play();
+  
           showButtons.value = true;
           showVideo.value = true;
           showImage.value = false;
           showCanvas.value = true;
           addButtonDisabled.value = false;
+  
           // Start face detection loop
           detectFacesLoop();
         } catch (err) {
@@ -379,6 +372,7 @@
   
       onMounted(async () => {
         await loadFaceApiModels();
+        restart();
       });
   
       watch(video, (newVideo) => {
