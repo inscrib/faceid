@@ -148,6 +148,7 @@
       
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
+        message.loading("Face detection models are loaded...");
         await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
         await faceapi.loadFaceRecognitionModel(MODEL_URL);
