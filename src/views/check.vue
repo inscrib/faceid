@@ -40,6 +40,7 @@ async function fnLoadModel() {
 
     state.netsLoadModel = false;
     await fnOpen();
+    await fnRedrawDiscern();
 
 }
 
