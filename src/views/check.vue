@@ -3,7 +3,7 @@
       <div class="page_load" v-show="state.netsLoadModel">Load Model...</div>
       <div class="page_draw" v-show="!state.netsLoadModel">
         <h3>人脸检测：</h3>
-        <div class="page_draw-discern">
+        <div class="media-container" >
             <video
             id="page_draw-video"
             poster="/images/720x480.png"
