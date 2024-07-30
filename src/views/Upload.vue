@@ -1,135 +1,137 @@
 <template>
-    <n-card class="main-container">
-      <n-space vertical size="large">
-        <n-steps vertical :current="current" :size="medium" :status="currentStatus">
-          <n-step
-            title="Upload Image"
-            description="Upload an image for face recognition or addition"
+  <n-card class="main-container">
+    <n-space vertical size="large">
+      <n-steps vertical :current="current" :size="medium" :status="currentStatus">
+        <n-step
+          title="Upload Image"
+          description="Upload an image for face recognition or addition"
+        />
+        <n-step
+          title="Add Person"
+          description="Add a new person to the database"
+        />
+        <n-step
+          title="Recognize"
+          description="Recognize the person in the image"
+        />
+        <n-step
+          title="Result"
+          description="View the recognition result"
+        />
+      </n-steps>
+7
+      <div v-if="current === 1 || current === 2" class="upload-and-process-step">  
+        <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
+          <img
+            v-if="showImage"
+            :src="imageSrc"
+            alt="UploadImg"
+            class="media"
           />
-          <n-step
-            title="Add Person"
-            description="Add a new person to the database"
-          />
-          <n-step
-            title="Recognize"
-            description="Recognize the person in the image"
-          />
-          <n-step
-            title="Result"
-            description="View the recognition result"
-          />
-        </n-steps>
-6
-        <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
-          <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
-            <img
-              v-if="showImage"
-              :src="imageSrc"
-              alt="UploadImg"
-              class="media"
-            />
-            <video
-              v-if="showVideo"
-              :ref="video"
-              playsinline
-              class="media"
-            ></video>
-            <canvas
-              ref="canvas"
-              :class="{ 'n-hidden': !showCanvas }"
-              class="media"
-            ></canvas>
-            <div v-if="showLoader" class="loader-container">
-              <n-spin size="large" />
-            </div>
-          </div>  
-          <n-upload
-            accept="image/*"
-            :default-upload="false"
-            @change="handleFileChange"
-            :max="1"
-          >
-            <n-divider />
-            <n-button>Upload Image</n-button>
-          </n-upload>
-          <div v-if="current === 2" class="process-step">   
-            <n-button @click="store" :disabled="!showButtons || !faceDetected">
-              ADD YOUR DATA
-            </n-button>
-          </div>  
+          <video
+            v-if="showVideo"
+            ref="videoRef"
+            playsinline
+            class="media"
+          ></video>
+          <canvas
+            ref="canvas"
+            :class="{ 'n-hidden': !showCanvas }"
+            class="media"
+          ></canvas>
+          <div v-if="showLoader" class="loader-container">
+            <n-spin size="large" />
+          </div>
         </div>  
-  
-        <div v-if="current === 3" class="add-or-recognize-step">   
-          <div class="media-container">
-            <img
-              v-if="showImage"
-              :src="imageSrc"
-              alt="UploadImg"
-              class="media"
-            />
-            <video
-              v-if="showVideo"
-              ref="video"
-              playsinline
-              class="media"
-            ></video>
-            <canvas
-              ref="canvas"
-              :class="{ 'n-hidden': !showCanvas }"
-              class="media"
-            ></canvas>
-            <div v-if="showLoader" class="loader-container">
-              <n-spin size="large" />
-            </div>
-          </div>  
+        <n-upload
+          accept="image/*"
+          :default-upload="false"
+          @change="handleFileChange"
+          :max="1"
+        >
           <n-divider />
-          <n-upload
-            accept="image/*"
-            :default-upload="false"
-            @change="handleFileChange"
-            :max="1"
-          >
-            <n-button>Upload Image</n-button>
-          </n-upload>
-          <n-button type="primary" @click="recognize" :disabled="!showButtons || !faceDetected">
-            Recognize
+          <n-button>Upload Image</n-button>
+        </n-upload>
+        <div v-if="current === 2" class="process-step">  
+          <n-button @click="store" :disabled="!showButtons || !faceDetected">
+            ADD YOUR DATA
           </n-button>
         </div>  
+      </div>  
+
+      <div v-if="current === 3" class="add-or-recognize-step">  
+        <div class="media-container">
+          <img
+            v-if="showImage"
+            :src="imageSrc"
+            alt="UploadImg"
+            class="media"
+          />
+          <video
+            v-if="showVideo"
+            ref="videoRef"
+            playsinline
+            class="media"
+          ></video>
+          <canvas
+            ref="canvas"
+            :class="{ 'n-hidden': !showCanvas }"
+            class="media"
+          ></canvas>
+          <div v-if="showLoader" class="loader-container">
+            <n-spin size="large" />
+          </div>
+        </div>  
+        <n-divider />
+        <n-upload
+          accept="image/*"
+          :default-upload="false"
+          @change="handleFileChange"
+          :max="1"
+        >
+          <n-button>Upload Image</n-button>
+        </n-upload>
+        <n-button type="primary" @click="recognize" :disabled="!showButtons || !faceDetected">
+          Recognize
+        </n-button>
+      </div>  
+
+      <div v-if="current === 4" class="result-step">  
+        <n-result status="error" title="Fail" description="This function is not available">
+          <template #footer>
+            <n-button @click="refreshPage">BACK</n-button>
+          </template>
+        </n-result>
+      </div>
+    </n-space>
+  </n-card>
+</template>
+
   
-        <div v-if="current === 4" class="result-step">   
-          <n-result status="error" title="Fail" description="This function is not available">
-            <template #footer>
-              <n-button @click="refreshPage">BACK</n-button>
-            </template>
-          </n-result>
-        </div>
-      </n-space>
-    </n-card>
-  </template>
+<script>
+import { ref, onMounted, watch } from "vue";
+import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
+import { useCanister } from "@connect2ic/vue";
+import * as faceapi from 'face-api.js';
+
+export default {
+  setup() {
+    const [counter] = useCanister("couter", { mode: "anonymous" });
+    const message = useMessage();
+    const videoRef = ref(null);
+    const canvas = ref(null);
+    const imageSrc = ref(""); 
+    const showVideo = ref(true);
+    const showImage = ref(false);
+    const showCanvas = ref(false);
+    const showLoader = ref(false);
+    const showButtons = ref(false);
+    const showRestart = ref(false);
+    const addButtonDisabled = ref(false);
+    const current = ref(1);
+    const currentStatus = ref("process");
+    const faceDetected = ref(false);
   
-  <script>
-  import { ref, onMounted, watch } from "vue";
-  import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
-  import { useCanister } from "@connect2ic/vue";
-  import * as faceapi from 'face-api.js';
-  
-  export default {
-    setup() {
-      const [counter] = useCanister("couter", { mode: "anonymous" });
-      const message = useMessage();
-      const video = ref(null);
-      const canvas = ref(null);
-      const imageSrc = ref(""); 
-      const showVideo = ref(false);
-      const showImage = ref(true);
-      const showCanvas = ref(false);
-      const showLoader = ref(false);
-      const showButtons = ref(false);
-      const showRestart = ref(false);
-      const addButtonDisabled = ref(false);
-      const current = ref(1);
-      const currentStatus = ref("process");
-      const faceDetected = ref(false);
   
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
@@ -291,47 +293,51 @@
       reader.readAsDataURL(file.file);
     };
   
+
       const restart = async () => {
-        showRestart.value = false;
-        showLoader.value = true;
-        showVideo.value = true;
-        try {
-          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            message.warning('getUserMedia is not supported in this browser');
-            return;
-          }
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "user" }
-          });
-          message.info("1");
-
-          video.value.srcObject = stream;
-          message.info("3");
-
-          await video.value.play();
-          message.info("4");
-
-          showButtons.value = true;
-          showVideo.value = true;
-          showImage.value = false;
-          showCanvas.value = true;
-          addButtonDisabled.value = false;
-          message.info("5");
-
-          // Start face detection loop
-          detectFacesLoop();
-        } catch (err) {
-          console.error(`An error occurred: ${err}`);
-          showImage.value = false;
-          showButtons.value = true;
-          showVideo.value = false;
-          showCanvas.value = false;
-          message.warning("Unable to launch camera, but you can upload photos");
-        } finally {
-          showLoader.value = false;
+      showRestart.value = false;
+      showLoader.value = true;
+      showVideo.value = true;
+      showImage.value = false;
+      try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('getUserMedia is not supported in this browser');
         }
-      };
-  
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" }
+        });
+        message.info("1");
+
+        if (videoRef.value) {
+          videoRef.value.srcObject = stream;
+          message.info("2");
+
+          await videoRef.value.play();
+        } else {
+          throw new Error('Video element not found');
+        }
+        message.info("3");
+
+        showButtons.value = true;
+        showCanvas.value = true;
+        addButtonDisabled.value = false;
+        message.info("4");
+
+        // Start face detection loop
+        detectFacesLoop();
+      } catch (err) {
+        console.error(`An error occurred: ${err}`);
+        message.warning("Unable to launch camera, falling back to image upload");
+        showImage.value = true;
+        showVideo.value = false;
+      } finally {
+        showLoader.value = false;
+        showButtons.value = true;
+      }
+    };
+
+
+      
       const detectFacesLoop = async () => {
         if (showVideo.value && video.value) {
           const detections = await detectFaces(video.value);
