@@ -343,47 +343,87 @@ export default {
       reader.readAsDataURL(file.file);
     };
 
-    const restart = async () => {
-  showRestart.value = false
-  showLoader.value = true
+//     const restart = async () => {
+//   showRestart.value = false
+//   showLoader.value = true
+
+//   try {
+//     // 清除之前的图片
+//     imageSrc.value = ''
+
+//     // 停止之前的视频流（如果存在）
+//     if (video.value && video.value.srcObject) {
+//       const tracks = video.value.srcObject.getTracks()
+//       tracks.forEach(track => track.stop())
+//     }
+
+//     // 获取新的视频流
+//     const stream = await navigator.mediaDevices.getUserMedia({
+//       video: true,
+//       audio: false,
+//     })
+
+//     video.value.srcObject = stream
+//     await video.value.play()
+
+//     // 更新UI状态
+//     showButtons.value = true
+//     showVideo.value = true
+//     showImage.value = false
+//     showCanvas.value = false
+//     addButtonDisabled.value = false
+//   } catch (err) {
+//     console.error(`An error occurred: ${err}`)
+//     showImage.value = false  // 不显示之前的图片
+//     showButtons.value = true
+//     showVideo.value = false
+//     showCanvas.value = false
+//     message.warning("Unable to launch camera, but you can upload photos")
+//   } finally {
+//     showLoader.value = false
+//   }
+// }
+
+const restart = async () => {
+  showRestart.value = false;
+  showLoader.value = true; // 显示加载指示器
 
   try {
-    // 清除之前的图片
-    imageSrc.value = ''
-    
-    // 停止之前的视频流（如果存在）
-    if (video.value && video.value.srcObject) {
-      const tracks = video.value.srcObject.getTracks()
-      tracks.forEach(track => track.stop())
+    // 检查是否支持 getUserMedia
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('getUserMedia is not supported in this browser');
     }
 
-    // 获取新的视频流
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false,
-    })
+    });
 
-    video.value.srcObject = stream
-    await video.value.play()
+    if (!video.value) {
+      throw new Error('Video element not found');
+    }
 
-    // 更新UI状态
-    showButtons.value = true
-    showVideo.value = true
-    showImage.value = false
-    showCanvas.value = false
-    addButtonDisabled.value = false
+    video.value.srcObject = stream;
+    await video.value.play(); // 等待视频开始播放
+
+    // 更新 UI 状态
+    showButtons.value = true;
+    showVideo.value = true;
+    showImage.value = false;
+    showCanvas.value = false;
+    addButtonDisabled.value = false;
   } catch (err) {
-    console.error(`An error occurred: ${err}`)
-    showImage.value = false  // 不显示之前的图片
-    showButtons.value = true
-    showVideo.value = false
-    showCanvas.value = false
-    message.warning("Unable to launch camera, but you can upload photos")
+    console.error(`An error occurred: ${err}`);
+    // 更新 UI 状态以反映错误
+    showImage.value = false;  // 不显示之前的图片
+    showButtons.value = true;
+    showVideo.value = false;
+    showCanvas.value = false;
+    message.warning("Unable to launch camera, but you can upload photos");
   } finally {
-    showLoader.value = false
+    showLoader.value = false; // 无论成功与否，都隐藏加载指示器
   }
-}
-
+};
 
 
 
