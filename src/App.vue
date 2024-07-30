@@ -38,7 +38,7 @@ v-model:value="activeTab"
         FACEID
       </n-gradient-text>
       <n-text class="subtitle" :depth="3">
-        the fairest token distribution
+        the fairest token distribution DID
       </n-text>
     </div>
     <n-tabs
