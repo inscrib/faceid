@@ -2,7 +2,7 @@
     <div class="page">
       <div class="page_load" >Load Model...</div>
       <div class="page_draw" >
-        <h3>人脸检测：</h3>
+        <h3>check：</h3>
         <div class="media-container" >
             <video
             id="page_draw-video"
@@ -42,8 +42,7 @@
     discernCanvasEl = document.getElementById("page_draw-video-canvas");
   
     netsLoadModel = false;
-    await fnOpen();
-    await fnRedrawDiscern();
+
   }
   
   async function fnRedrawDiscern() {
@@ -91,7 +90,7 @@
     } catch (error) {
       stream = null;
       console.error(error);
-      alert("视频媒体流获取错误: " + error);
+      alert("Error: " + error);
     }
   }
   
@@ -117,7 +116,9 @@
   }
   
   onMounted(() => {
-    fnLoadModel();
+    await fnLoadModel();
+    await fnOpen();
+    await fnRedrawDiscern();
   });
   
   onUnmounted(() => {
