@@ -10,9 +10,6 @@ const client = createClient({
   canisters: {
     couter
   },
-  globalProviderConfig: {
-    host: 'https://ic0.app', // 替换为实际的 IC 网络地址
-  },
 });
 // ic0.app
 </script>
