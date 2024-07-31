@@ -120,7 +120,7 @@
       const video = ref(null);
       const canvas = ref(null);
       const imageSrc = ref(""); 
-      const showVideo = ref(false);
+      const showVideo = ref(true);
       const showImage = ref(false);
       const showCanvas = ref(false);
       const showLoader = ref(false);
