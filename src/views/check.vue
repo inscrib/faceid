@@ -275,14 +275,14 @@ onUnmounted(() => {
         Start/Pause
     </n-button>
 
-      <div class="option-item">
+      <!-- <div class="option-item">
         <input
           id="discern-video"
           type="file"
           accept="video/mp4, video/ogg, video/webm"
           @change="fnChangeDiscern($event)"
         />
-      </div>
+      </div> -->
 
       <div class="option-item">
         <label for="algorithm-model">models</label>

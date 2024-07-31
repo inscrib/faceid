@@ -96,7 +96,7 @@
         </div>  
   
         <div v-if="current === 4" class="result-step">   
-          <n-result status="error" title="Fail" description="This function is not available">
+          <n-result status="success" title="Success" description="This function is not available">
             <template #footer>
               <n-button @click="refreshPage">BACK</n-button>
             </template>
