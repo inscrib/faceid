@@ -133,12 +133,17 @@
   
       const loadFaceApiModels = async () => {
         const MODEL_URL = '/models';
-        await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
-        await faceapi.loadFaceLandmarkModel(MODEL_URL);
-        await faceapi.loadFaceRecognitionModel(MODEL_URL);
-        message.success("Face detection models loaded successfully");
-
-      };
+        try {
+    await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
+    await faceapi.loadFaceLandmarkModel(MODEL_URL);
+    await faceapi.loadFaceRecognitionModel(MODEL_URL);
+    message.success("Face detection models loaded successfully");
+  } catch (error) {
+    console.error("Error loading face detection models:", error);
+    message.error(`Failed to load face detection models: ${error.message}`);
+    throw error; // 重新抛出错误，以便上层函数可以捕获
+  }
+};
   
       const detectFaces = async (image) => {
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks();
@@ -290,45 +295,74 @@
     };
   
       const restart = async () => {
-        showRestart.value = false;
-        showLoader.value = true;
-        showButtons.value = false;
         try {
-          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            message.warning('getUserMedia is not supported in this browser');
-            return;
-          }
-          message.info("1");
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "user" }
-          }).then((stream) => {
-      video.value.srcObject = stream
-    })
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('getUserMedia is not supported in this browser');
+    }
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" }
+    });
+    message.info("1");
 
+          if (video.value) {
+            video.value.srcObject = stream;
+            message.info("2");
 
-    message.info("2");
-          await video.value.play();
-          message.info("4");
+            await video.value.play();
+            message.info("3");
 
-          showButtons.value = true;
-          showVideo.value = true;
-          showImage.value = false;
-          showCanvas.value = true;
-          addButtonDisabled.value = false;
-          message.info("5");
+      showVideo.value = true;
+      showButtons.value = true;
+      detectFacesLoop();
+    } else {
+      throw new Error('Video element not found');
+    }
+  } catch (err) {
+    console.error(`Camera initialization error: ${err}`);
+    message.error(`Unable to initialize camera: ${err.message}`);
+  }
 
-          // Start face detection loop
-          detectFacesLoop();
-        } catch (err) {
-          console.error(`An error occurred: ${err}`);
-          showImage.value = false;
-          showButtons.value = true;
-          showVideo.value = false;
-          showCanvas.value = false;
-          message.warning("Unable to launch camera, but you can upload photos");
-        } finally {
-          showLoader.value = false;
-        }
+//         showRestart.value = false;
+//         showLoader.value = true;
+//         showButtons.value = false;
+//         try {
+//           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+//             message.warning('getUserMedia is not supported in this browser');
+//             return;
+//           }
+//           const stream = await navigator.mediaDevices.getUserMedia({
+//             video: { facingMode: "user" }
+//           })
+//           message.info("1");
+//           if (video.value) {
+//   video.value.srcObject = stream;
+// } else {
+//   console.error('Video element not found');
+// }
+//           message.info("3");
+
+//           await video.value.play();
+//           message.info("4");
+
+//           showButtons.value = true;
+//           showVideo.value = true;
+//           showImage.value = false;
+//           showCanvas.value = true;
+//           addButtonDisabled.value = false;
+//           message.info("5");
+
+//           // Start face detection loop
+//           detectFacesLoop();
+//         } catch (err) {
+//           console.error(`An error occurred: ${err}`);
+//           showImage.value = false;
+//           showButtons.value = true;
+//           showVideo.value = false;
+//           showCanvas.value = false;
+//           message.warning("Unable to launch camera, but you can upload photos");
+//         } finally {
+//           showLoader.value = false;
+//         }
       };
       const isComponentMounted = ref(true);
  
@@ -336,18 +370,23 @@
   if (!isComponentMounted.value) return;
 
   if (showVideo.value && video.value) {
-    const detections = await detectFaces(video.value);
-    if (detections.length > 0) {
-      drawDetections(detections);
-      faceDetected.value = true;
-    } else {
-      faceDetected.value = false;
-      const ctx = canvas.value.getContext('2d');
-      ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+    try {
+      const detections = await detectFaces(video.value);
+      if (detections.length > 0) {
+        drawDetections(detections);
+        faceDetected.value = true;
+      } else {
+        faceDetected.value = false;
+        const ctx = canvas.value.getContext('2d');
+        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+      }
+    } catch (error) {
+      console.error("Error in face detection:", error);
     }
   }
   requestAnimationFrame(detectFacesLoop);
 };
+
 
   
       const sanitize = (name) => {
@@ -369,21 +408,32 @@
 
       onUnmounted(() => {
   isComponentMounted.value = false;
+  if (video.value && video.value.srcObject) {
+    const tracks = video.value.srcObject.getTracks();
+    tracks.forEach(track => track.stop());
+  }
 });
 
-
+watch(video, (newVideo) => {
+  if (newVideo) {
+    newVideo.onloadedmetadata  = () => {
+      canvas.value.width = newVideo.videoWidth;
+      canvas.value.height = newVideo.videoHeight;
+    };
+  }
+});
   
-      watch(video, (newVideo) => {
-        if (newVideo) {
-          newVideo.oncanplay = () => {
-            showVideo.value = true;
-            showImage.value = false;
-            showCanvas.value = true;
-            canvas.value.width = newVideo.videoWidth;
-            canvas.value.height = newVideo.videoHeight;
-          };
-        }
-      });
+      // watch(video, (newVideo) => {
+      //   if (newVideo) {
+      //     newVideo.oncanplay = () => {
+      //       showVideo.value = true;
+      //       showImage.value = false;
+      //       showCanvas.value = true;
+      //       canvas.value.width = newVideo.videoWidth;
+      //       canvas.value.height = newVideo.videoHeight;
+      //     };
+      //   }
+      // });
   
       return {
         refreshPage,
