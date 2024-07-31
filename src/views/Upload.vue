@@ -19,6 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
+        <n-button @click="next">click</n-button>
 
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
@@ -52,7 +53,6 @@
             <n-divider />
             <n-button>Upload Image</n-button>
           </n-upload>
-          <n-button @click="next">click</n-button>
 
           <div v-if="current === 2" class="process-step">   
             <n-button @click="store" :disabled="!showButtons || !faceDetected">
@@ -62,7 +62,7 @@
         </div>  
   
         <div v-if="current === 3" class="add-or-recognize-step">   
-          <div class="media-container">
+          <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
               v-if="showImage"
               :src="imageSrc"
@@ -99,7 +99,7 @@
         </div>  
   
         <div v-if="current === 4" class="result-step">   
-          <n-result status="success" title="Success" description="This function is not available">
+          <n-result status="success" title="Success" description="This function is now available">
             <template #footer>
               <n-button @click="refreshPage">BACK</n-button>
             </template>
@@ -122,7 +122,7 @@
       const message = useMessage();
       const video = ref(null);
       const canvas = ref(null);
-      const imageSrc = ref(""); 
+      const imageSrc = ref("/images/720x480.png"); 
       const showVideo = ref(true);
       const showImage = ref(false);
       const showCanvas = ref(false);
