@@ -19,7 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
-4
+5
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -298,15 +298,15 @@
             message.warning('getUserMedia is not supported in this browser');
             return;
           }
+          message.info("1");
           const stream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "user" }
-          });
-          message.info("1");
+          }).then((stream) => {
+      video.value.srcObject = stream
+    })
 
 
-          video.value.srcObject = stream;
-          message.info("3");
-
+    message.info("2");
           await video.value.play();
           message.info("4");
 
