@@ -19,6 +19,7 @@
             description="View the recognition result"
           />
         </n-steps>
+
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -51,6 +52,8 @@
             <n-divider />
             <n-button>Upload Image</n-button>
           </n-upload>
+          <n-button @click="next">click</n-button>
+
           <div v-if="current === 2" class="process-step">   
             <n-button @click="store" :disabled="!showButtons || !faceDetected">
               ADD YOUR DATA
@@ -144,12 +147,14 @@
     throw error; // 重新抛出错误，以便上层函数可以捕获
   }
 };
-  
+
       const detectFaces = async (image) => {
         const detections = await faceapi.detectAllFaces(image).withFaceLandmarks();
         return detections;
       };
-  
+
+
+      
       const drawDetections = (detections) => {
         const ctx = canvas.value.getContext('2d');
         ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
@@ -263,6 +268,11 @@
       }
     };
 
+    const next = () => {
+  if (current.value <= 3) {
+    current.value = 3
+  } 
+} 
     const handleFileChange = async (options) => {
       const { file } = options;
       const reader = new FileReader();
@@ -452,6 +462,7 @@ watch(video, (newVideo) => {
         handleFileChange,
         restart,
         faceDetected,
+        next,
       };
     },
   };
