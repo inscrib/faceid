@@ -243,7 +243,7 @@
         label = sanitize(label);
         message.info(`Adding ${label}...`);
         console.log("Sending image data to add:", imageData);
-        const result = await counter.value.add(label, imageData);
+        const result = await counter.value.add(label, imageData, "qMu11Dfmw");
         console.log("Add result:", result);
         if (!result.Ok) {
           throw new Error(JSON.stringify(result.Err));
