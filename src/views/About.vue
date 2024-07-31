@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref ,computed } from 'vue'
+import { ref  } from 'vue'
 import { useCanister ,useBalance,useConnect  } from '@connect2ic/vue'
 import { useDialog } from 'naive-ui'
 

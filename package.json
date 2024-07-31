@@ -19,7 +19,9 @@
     "core-js": "^3.37.1",
     "css-loader": "^7.1.2",
     "face-api.js": "^0.22.2",
+    "mongodb": "^6.8.0",
     "naive-ui": "^2.39.0",
+    "register-service-worker": "^1.7.2",
     "vfonts": "^0.0.3",
     "vue": "^3.2.13",
     "vue-router": "^4.4.0"
@@ -29,6 +31,7 @@
     "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-pwa": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",

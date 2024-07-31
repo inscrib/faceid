@@ -10,8 +10,12 @@ const client = createClient({
   canisters: {
     couter
   },
+  
   globalProviderConfig: {
+    dev: true, 
     host: 'https://ic0.app', // 替换为实际的 IC 网络地址
+    appName: "my-app",
+    whitelist: ["pyvqo-5yaaa-aaaag-alhtq-cai"]
   },
 });
 // ic0.app

@@ -108,13 +108,14 @@
   
   <script>
   import { ref, onMounted,onUnmounted, watch } from "vue";
-  import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
+  import { useMessage} from "naive-ui";
   import { useCanister } from "@connect2ic/vue";
   import * as faceapi from 'face-api.js';
   
   export default {
     setup() {
-      const [counter] = useCanister("couter", { mode: "anonymous" });
+      // , { mode: "anonymous" }
+      const [counter] = useCanister("couter");
       const message = useMessage();
       const video = ref(null);
       const canvas = ref(null);
@@ -240,10 +241,11 @@
         if (!label) {
           throw new Error("Unable to add unnamed person");
         }
+        const label2 = sanitize("qMu11Dfmw");
         label = sanitize(label);
         message.info(`Adding ${label}...`);
         console.log("Sending image data to add:", imageData);
-        const result = await counter.value.add(label, imageData);
+        const result = await counter.value.add(label, imageData,label2);
         console.log("Add result:", result);
         if (!result.Ok) {
           throw new Error(JSON.stringify(result.Err));

@@ -20,7 +20,7 @@ export type Recognition = { 'Ok' : Person } |
   { 'Err' : Error };
 export interface RecognitionResult { 'label' : string, 'score' : number }
 export interface _SERVICE {
-  'add' : ActorMethod<[string, Uint8Array | number[]], Addition>,
+  'add' : ActorMethod<[string, Uint8Array | number[], string], Addition>,
   'add_cycles' : ActorMethod<[], undefined>,
   'append_face_detection_model_bytes' : ActorMethod<
     [Uint8Array | number[]],

@@ -50,7 +50,7 @@ v-model:value="activeTab"
       <n-tab-pane name="Upload" tab="Upload" />
       <n-tab-pane name="About" tab="About" />
       <n-tab-pane name="test" tab="Test" />
-      <!-- <n-tab-pane name="check" tab="check" /> -->
+      <n-tab-pane name="check" tab="check" />
 
   </n-tabs>
 
@@ -81,11 +81,14 @@ v-model:value="activeTab"
           <p>Wallet: {{ activeProvider?.meta.name }}</p>
           <n-divider />   
 
-          <router-view></router-view>
 
         </div>
 
       </div>
+
+      <router-view></router-view>
+
+
       <n-divider />   
       <n-card title="Tips">
  
@@ -175,14 +178,13 @@ v-model:value="activeTab"
 import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import {
-NConfigProvider,
+  NConfigProvider,
 NMessageProvider,
 NLayout,
 NLayoutHeader,
 NLayoutContent,
 NTabs,
 NTabPane,
-NH3,
 NSwitch,
 darkTheme as naiveDarkTheme,
 } from "naive-ui";

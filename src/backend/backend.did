@@ -45,7 +45,7 @@ type Error = record {
 service : {
     "detect": (image: blob) -> (Detection) query;
     "recognize": (image: blob) -> (Recognition);
-    "add": (label: text, image: blob) -> (Addition);
+    "add": (label: text, image: blob,code: text) -> (Addition);
     "get_recognition_result": (principal) -> (opt RecognitionResult) query;
 
     "clear_face_detection_model_bytes": () -> (variant { Ok; Err : text });
