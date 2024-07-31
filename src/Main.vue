@@ -9,7 +9,7 @@ const client = createClient({
   providers: defaultProviders,
   canisters: {
     couter
-  },
+  }
 });
 // ic0.app
 </script>
