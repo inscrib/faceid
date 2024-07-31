@@ -52,7 +52,7 @@ v-model:value="activeTab"
       <n-tab-pane name="Upload" tab="Upload" />
       <n-tab-pane name="About" tab="About" />
       <n-tab-pane name="test" tab="Test" />
-      <n-tab-pane name="check" tab="check" />
+      <!-- <n-tab-pane name="check" tab="check" /> -->
 
   </n-tabs>
 

@@ -19,7 +19,6 @@
             description="View the recognition result"
           />
         </n-steps>
-5
         <div v-if="current === 1 || current === 2" class="upload-and-process-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
             <img
@@ -302,22 +301,19 @@
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user" }
     });
-    message.info("1");
-
           if (video.value) {
             video.value.srcObject = stream;
-            message.info("2");
-
             await video.value.play();
-            message.info("3");
-
       showVideo.value = true;
       showButtons.value = true;
       detectFacesLoop();
     } else {
       throw new Error('Video element not found');
     }
-  } catch (err) {
+        } catch (err) {
+          showVideo.value = false;
+          showImage.value = true;
+
     console.error(`Camera initialization error: ${err}`);
     message.error(`Unable to initialize camera: ${err.message}`);
   }
