@@ -80,13 +80,13 @@ v-model:value="activeTab"
           <p>Principal: {{ principal }}</p>
           <p>Wallet: {{ activeProvider?.meta.name }}</p>
           <n-divider />   
-
+          <router-view></router-view>
 
         </div>
 
       </div>
 
-      <router-view></router-view>
+
 
 
       <n-divider />   
