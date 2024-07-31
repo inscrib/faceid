@@ -108,7 +108,7 @@
   </template>
   
   <script>
-  import { ref, onMounted,onMounted, watch } from "vue";
+  import { ref, onMounted,onUnmounted, watch } from "vue";
   import { NSpace, NCard, NButton, NSpin, NUpload, NModal, useMessage, NSteps, NStep, NProgress, NText, NResult, NDivider } from "naive-ui";
   import { useCanister } from "@connect2ic/vue";
   import * as faceapi from 'face-api.js';
@@ -321,7 +321,7 @@
     console.error(`Camera initialization error: ${err}`);
     message.error(`Unable to initialize camera: ${err.message}`);
   }
-
+};
 //         showRestart.value = false;
 //         showLoader.value = true;
 //         showButtons.value = false;
@@ -363,7 +363,7 @@
 //         } finally {
 //           showLoader.value = false;
 //         }
-      };
+
       const isComponentMounted = ref(true);
  
       const detectFacesLoop = async () => {

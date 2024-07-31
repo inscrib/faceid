@@ -42,7 +42,8 @@
     discernCanvasEl = document.getElementById("page_draw-video-canvas");
   
     netsLoadModel = false;
-
+    await fnOpen();
+    await fnRedrawDiscern();
   }
   
   async function fnRedrawDiscern() {
@@ -116,9 +117,7 @@
   }
   
   onMounted(() => {
-    await fnLoadModel();
-    await fnOpen();
-    await fnRedrawDiscern();
+    fnLoadModel();
   });
   
   onUnmounted(() => {
