@@ -114,7 +114,7 @@
   
   export default {
     setup() {
-      const [counter] = useCanister("couter", { mode: "anonymous" });
+      const [counter] = useCanister("couter");
       const message = useMessage();
       const video = ref(null);
       const canvas = ref(null);
