@@ -156,8 +156,9 @@ const rules = {
     validator(rule, value) {
       return value >= 0 && value <= 100;
     },
+    required: true,
     trigger: ["blur", "change"],
-    message: "Minimum Difference must be less than 50",
+    message: "Minimum Difference must be less than 2",
   },
   description: {
     required: true,
@@ -171,7 +172,6 @@ const handleSubmit = (e) => {
   formRef.value?.validate((errors) => {
     if (!errors) {
       message.error("not available");
-
     } else {
       message.error("Please fix the errors in the form");
     }

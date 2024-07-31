@@ -1,17 +1,43 @@
 <template>
   <div class="query-dashboard">
 
-    <n-layout-header bordered style="padding: 16px 24px;">
-        <n-space align="center" justify="space-between">
-          <n-space align="center">
-            <n-avatar  :size="48" src="https://pbs.twimg.com/profile_images/1773015678758387712/XQIG1d9o_400x400.jpg" />
-            <n-h2 style="margin: 0;">face-id</n-h2>
-          </n-space>
+
           <!-- <n-statistic label="Total Supply" tabular-nums> -->
             <!-- <n-number-animation ref="numberAnimationInstRef" :from="0" :to="1000000000000" /></n-statistic> -->
-            <n-button @click="handleClick">Claim</n-button>
-        </n-space>
-      </n-layout-header>
+  
+
+
+      <n-page-header subtitle="br5f7-7uaaa-aaaaa-qaaca-cai" @back="handleBack">
+    <n-grid :cols="4">
+      <n-gi>
+        <n-statistic label="Supply" value="100000" />
+      </n-gi>
+      <n-gi>
+        <n-statistic label="Progress" value="0%" />
+      </n-gi>
+      <n-gi>
+        <n-statistic label="Holder" value="null" />
+      </n-gi>
+      <n-gi>
+        <n-statistic label="deployid" value="0" />
+      </n-gi>
+    </n-grid>
+    <template #title>
+      <a href="https://anyway.fm/" style="text-decoration: none; color: inherit">face-id</a>
+    </template>
+
+    <template #avatar>
+      <n-avatar  :size="48" src="https://pbs.twimg.com/profile_images/1773015678758387712/XQIG1d9o_400x400.jpg" />
+    </template>
+    <template #extra>
+      <n-space>
+        <n-button @click="handleClick">Claim</n-button> 
+      </n-space>
+    </template>
+
+  </n-page-header>
+
+  <n-divider />   
       <n-card title="Your Assets">
 
   <n-spin :show="loading">
@@ -43,10 +69,12 @@
           {{ totalUsers }}
         </n-statistic>
         <n-progress
-    type="line"
+    style="margin: 0 8px 12px 0"
+    type="circle"
+    color="green"
+    :show-indicator="true"
+    status="default"
     :percentage="1"
-    indicator-placement="inside"
-    processing
   />
 
         <n-button @click="getAuthorizedUsers" :loading="loadingUsers">

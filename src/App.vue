@@ -30,12 +30,10 @@ v-model:value="activeTab"
       <n-gradient-text
        class="main-title"
         :size="28"
-        :gradient="{
-         from: 'rgb(128, 0, 128)',
-         to: 'rgb(0, 255, 0)',
-        }"
+         type="success"
       >
         FACEID
+
       </n-gradient-text>
       <n-text class="subtitle" :depth="3">
         the fairest token distribution DID
@@ -59,7 +57,8 @@ v-model:value="activeTab"
     </div>
   </n-layout-header>
 
-
+  <n-alert title="Warning!" type="info" closable>
+    It is still in testing pharase and the contract hasnt officially uploaded.<br/> pls do not transfer any assets to address.  </n-alert>
 
 <n-layout-content class="main-content">
     <div class="content-wrapper">
@@ -78,8 +77,8 @@ v-model:value="activeTab"
       
       <div v-else class="disconnected-message">
         <div class="connected-content">
-          <p>Connected with principal: {{ principal }}</p>
-          <p>Active provider: {{ activeProvider?.meta.name }}</p>
+          <p>Principal: {{ principal }}</p>
+          <p>Wallet: {{ activeProvider?.meta.name }}</p>
           <n-divider />   
 
           <router-view></router-view>
@@ -89,45 +88,47 @@ v-model:value="activeTab"
       </div>
       <n-divider />   
       <n-card title="Tips">
-  <n-collapse>
-    <n-collapse-item title="What should I do?" name="1">
-  <div>
-    1. Click on the Claim option.<br/>
-    2. Upload your face data and information. Note that once uploaded, you cannot add new information agein. <br/>
-    3. You can view your status in the About section.
-  </div>
-</n-collapse-item>
+ 
+        <n-collapse>
+  <n-collapse-item title="What should I do?" name="1">
+    <div>
+      1. Hit that shiny Claim Button like you re ringing a bell! 🛎️<br/>
+      2. Look up, smile, and upload your face data. Just remember, once its up there, its set in stone. So strike your best pose! 😎<br/>
+      3. Check out your status on the About page and feel like the rockstar you are. 🎸
+    </div>
+  </n-collapse-item>
 
-<n-collapse-item title="When can I check my tokens?" name="2">
-  <div>
-    1. Claiming consists of two parts. After uploading your data, you need to use the recognition feature to claim your face ID.<br/>
-    2. Once successfully claimed, you cannt useing recognition again. Each person has up to 3 attempts.<br/>
-    3. Your token allocation depends on your score. Higher differences means more tokens! but a very high difference may lead to recognition failure.<br/>
-    4. When the process is complete and the number of claimed ppl reaches the target, the canisters will automatically distribute the faceid token balance.
-  </div>
-</n-collapse-item>
+  <n-collapse-item title="When can I check my tokens?" name="2">
+    <div>
+      1. The claim process is a two-act show. First, upload your data, then use the recognition feature to claim your Face ID. Its a VIP pass! You address will link with your face permently! 🎟️<br/>
+      2. Once you ve claimed, you cant use recognition again. You ve got three shots at glory, so make them count! ⚡<br/>
+      3. Your tokens are tied to your score. The higher the score, the more tokens you get! But dont go too far off the charts. accuracy is key! 🎯<br/>
+      4. After the grand finale, and once we hit our target number of claims. the canisters will automatically dish out your "FaceID" token balance<br/>(tips of tip, we havent decide the name,so if u have any good idea,tell us! ). 🎉
+    </div>
+  </n-collapse-item>
 
-<n-collapse-item title="What is the total amount of tokens and how are they distributed?" name="3">
-  <div>
-    1. The total amount of Face ID tokens is unlimited but depends on the number of test users.<br/>
-    2. All tokens are distributed to test users, approximately 500 people.<br/>
-    3. We are exploring a new anti-bot minting methods. This is just a test, so there may be issues. Do not deposit any balance into your account.
-  </div>
-</n-collapse-item>
+  <n-collapse-item title="What is the total amount of tokens and how are they distributed?" name="3">
+    <div>
+      1. The total number of Face ID tokens is 100b, but it depends on the number of test users, your score is your share. 🌌<br/>
+      2. All tokens go to our amazing test users, about 500 awesome folks. 🎉<br/>
+      3. We re trying out new anti-bot minting methods. This is a test, so things might get a little wobbly. Dont put any real balance into your account; we re just here for the fun! 🤖
+    </div>
+  </n-collapse-item>
 
-<n-collapse-item title="Is my data secure?" name="4">
-  <div>
-    Yes, your information is securely stored in the ICP canister. No one can access it, and it is only used wen verifying your information.
-  </div>
-</n-collapse-item>
+  <n-collapse-item title="Is my data secure?" name="4">
+    <div>
+      Absolutely! Your info is locked up tighter than a treasure chest in the ICP canister. No one can access it; it's only used for verifying your info. 🛡️
+    </div>
+  </n-collapse-item>
 
-<n-collapse-item title="What are the next steps?" name="5">
-  <div>
-    We plan to implement a new distribution method that uses face recognition to ensure fair access to tokens for more ppl.
-  </div>
-</n-collapse-item>
+  <n-collapse-item title="What are the next steps?" name="5">
+    <div>
+      We're cooking up a fresh new distribution method using face recognition to ensure everyone gets a fair shot at the tokens. Stay tuned! 🍲
+    </div>
+  </n-collapse-item>
+</n-collapse>
 
-  </n-collapse>
+
 </n-card>
     </div>
   </n-layout-content>
@@ -137,7 +138,7 @@ v-model:value="activeTab"
 
 </n-layout>
 <footer class="footer">
-<p>@2024 && Build in the internet computer</p>
+<p>@2024 && Build On the internet computer && <a href="https://x.com/FaceidDid" style="color: aliceblue;">Twitter</a></p>
 </footer>
 </div>
 </div>
