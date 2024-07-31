@@ -11,9 +11,9 @@ const client = createClient({
     couter
   },
   globalProviderConfig: {
-    dev: true, 
+    dev: false, 
     host: 'https://ic0.app', // 替换为实际的 IC 网络地址
-    appName: "my-app",
+    appName: "face-id",
     whitelist: ["pyvqo-5yaaa-aaaag-alhtq-cai"]
   },
 });
