@@ -242,6 +242,8 @@ const handleClick = () => {
   });
 };
       onMounted(async () => {
+        await fetchBalance();
+        await getCycles(); 
         await getRecognitionResults();
         await getAuthorizedUsers();
       });
