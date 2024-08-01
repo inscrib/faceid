@@ -192,7 +192,7 @@ const getRecognitionResults = async () => {
       return { 
         pid: pid.replace('principal:', '').trim(), 
         label: label.replace('label:', '').trim(), 
-        score: score.replace('score:', '').trim() 
+        score: (parseFloat(score.replace('score:', '').trim()) * 10000).toFixed(2) // Multiply score by 100000 and format to 2 decimal places
       }
     })
   } catch (error) {
