@@ -85,14 +85,6 @@
             </div>
           </div>  
           <n-divider />
-          <n-upload
-            accept="image/*"
-            :default-upload="false"
-            @change="handleFileChange"
-            :max="1"
-          >
-            <n-button>Upload Image</n-button>
-          </n-upload>
           <n-button type="primary" @click="recognize" :disabled="!showButtons || !faceDetected">
             Recognize
           </n-button>
@@ -258,6 +250,7 @@
         message.success(`Successfully added ${label}.`);
         addButtonDisabled.value = true;
         current.value = 3;
+        await restart();
       } catch (err) {
         console.error("Error in store:", err);
         message.error(`Failed to add face: ${err.toString()}`);
