@@ -63,12 +63,6 @@
   
         <div v-if="current === 3" class="add-or-recognize-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
-            <img
-              v-if="showImage"
-              :src="imageSrc"
-              alt="UploadImg"
-              class="media"
-            />
             <video
               v-if="showVideo"
               ref="video"
