@@ -191,12 +191,65 @@ darkTheme as naiveDarkTheme,
 
 import { ConnectButton, ConnectDialog, useConnect } from "@connect2ic/vue";
 require('@connect2ic/core/style.css');
-const { isConnected,disconnect, principal,activeProvider } = useConnect({
+
+
+const clearAllSiteData = () => {
+  // 清除 localStorage
+  localStorage.clear();
+
+  // 清除 sessionStorage
+  sessionStorage.clear();
+
+  // 清除所有 cookies
+  document.cookie.split(";").forEach(function(c) { 
+    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+  });
+
+  // 清除 IndexedDB
+  const clearIndexedDB = async () => {
+    const databases = await window.indexedDB.databases()
+    databases.forEach(db => {
+      window.indexedDB.deleteDatabase(db.name)
+    })
+  }
+  clearIndexedDB();
+
+  // 清除 Cache Storage
+  if ('caches' in window) {
+    caches.keys().then(names => {
+      names.forEach(name => {
+        caches.delete(name);
+      });
+    });
+  }
+
+  // 清除 Application Cache
+  if (window.applicationCache) {
+    window.applicationCache.abort();
+  }
+
+  // 清除 Service Workers
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(registration => {
+        registration.unregister();
+      });
+    });
+  }
+
+  console.log("All site data cleared");
+}
+
+
+const { isConnected, disconnect, principal, activeProvider } = useConnect({
   onConnect: () => {
     console.log("Signed in");
+    refreshPage();
   },
   onDisconnect: () => {
     console.log("Signed out");
+    clearAllSiteData();
+    // 刷新页面以确保所有更改生效
   }
 });
 
@@ -386,7 +439,7 @@ justify-content: center;
 text-align: center;
 width: 100%;
 max-width: 600px;
-overflow-y:: auto;
+overflow-y: auto;
 min-height: 100%; /* 确保wrapper占据全部可用高度 */
 }
 
