@@ -284,13 +284,13 @@ onUnmounted(() => {
         />
       </div> -->
 
-      <div class="option-item">
+        <!-- <div class="option-item">
         <label for="algorithm-model">models</label>
         <select id="algorithm-model" v-model="state.netsType" class="select">
           <option value="ssdMobilenetv1">SSD Mobilenet V1</option>
           <option value="tinyFaceDetector">Tiny Face Detector</option>
         </select>
-      </div>
+      </div> -->
     </div> 
   </div>
 </template>
