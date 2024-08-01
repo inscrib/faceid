@@ -13,8 +13,8 @@ const client = createClient({
   
   globalProviderConfig: {
     dev: false, 
-    host: 'https://ic0.app', // 替换为实际的 IC 网络地址
-    appName: "my-app",
+    host: 'https://ic0.app', 
+    appName: "faceid",
     whitelist: ["pyvqo-5yaaa-aaaag-alhtq-cai"]
   },
 });

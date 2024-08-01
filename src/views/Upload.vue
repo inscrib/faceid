@@ -424,18 +424,6 @@ watch(video, (newVideo) => {
   }
 });
   
-      // watch(video, (newVideo) => {
-      //   if (newVideo) {
-      //     newVideo.oncanplay = () => {
-      //       showVideo.value = true;
-      //       showImage.value = false;
-      //       showCanvas.value = true;
-      //       canvas.value.width = newVideo.videoWidth;
-      //       canvas.value.height = newVideo.videoHeight;
-      //     };
-      //   }
-      // });
-  
       return {
         refreshPage,
         current,
