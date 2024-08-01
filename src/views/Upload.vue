@@ -255,12 +255,12 @@
       }
     };
 
-    const next = () => {
+    const next = async () => {
   if (current.value <= 3) {
     current.value = 3;
-      await restart();
   } 
-} 
+  await restart();
+};
     const handleFileChange = async (options) => {
       const { file } = options;
       const reader = new FileReader();
