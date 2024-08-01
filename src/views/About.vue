@@ -74,7 +74,7 @@
     color="green"
     :show-indicator="true"
     status="default"
-    :percentage="1"
+    :percentage="8"
   />
 
         <n-button @click="getAuthorizedUsers" :loading="loadingUsers">
@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref  } from 'vue'
+import { ref,onMounted  } from 'vue'
 import { useCanister ,useBalance,useConnect  } from '@connect2ic/vue'
 import { useDialog } from 'naive-ui'
 
@@ -241,7 +241,10 @@ const handleClick = () => {
     }
   });
 };
-
+      onMounted(async () => {
+        await getRecognitionResults();
+        await getAuthorizedUsers();
+      });
 
 
 
