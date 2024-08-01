@@ -355,7 +355,8 @@ padding: 10px;
 }
 
 .app-container {
-min-height: 95vh;
+  max-height: 95vh;
+overflow-y: auto; /* 允许垂直滚动 */
 }
 
 .header {
@@ -368,6 +369,8 @@ font-size: 14px;
 }
 
 .main-content {
+  flex: 1;
+  overflow-y: auto; /* 允许垂直滚动 */
 display: flex;
 justify-content: center;
 align-items: center; /* 改为 center 实现垂直居中 /
@@ -383,7 +386,8 @@ justify-content: center;
 text-align: center;
 width: 100%;
 max-width: 600px;
-height: 100%; /* 确保wrapper占据全部可用高度 */
+overflow-y:: auto;
+min-height: 100%; /* 确保wrapper占据全部可用高度 */
 }
 
 .connected-content,
