@@ -257,7 +257,8 @@
 
     const next = () => {
   if (current.value <= 3) {
-    current.value = 3
+    current.value = 3;
+      await restart();
   } 
 } 
     const handleFileChange = async (options) => {
