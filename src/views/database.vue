@@ -291,7 +291,7 @@ onUnmounted(() => {
       </div> -->
 
        <div class="option-item">
-        <label for="algorithm-model">Engin</label>
+        <label for="algorithm-model">Engine</label>
         <select id="algorithm-model" v-model="state.netsType" class="select">
           <option value="ssdMobilenetv1">Pro</option>
           <option value="tinyFaceDetector">Fast</option>
