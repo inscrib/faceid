@@ -1,4 +1,5 @@
 <template>
+  <div class="app-container" :class="{ 'dark-theme': isDarkTheme }">
   <n-card title="Token Upload Form">
     <n-form
       ref="formRef"
@@ -76,6 +77,7 @@
       </n-grid>
     </n-form>
   </n-card>
+    </div>
 </template>
 
 <script setup>
