@@ -13,8 +13,7 @@ const client = createClient({
   
   globalProviderConfig: {
     dev: false, 
-    host: 'https://ic0.app',
-    whitelist: ["pyvqo-5yaaa-aaaag-alhtq-cai"]
+    host: 'https://ic0.app'
   },
 });
 // ic0.app
