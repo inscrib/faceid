@@ -234,6 +234,12 @@ onUnmounted(() => {
 
 <template>
   <div class="page">
+        <n-alert title="Info 类型" type="info">
+      It is just a demo. All your information is securely stored in the ICP canister and will only be verified when checking consistency. 
+          <br/>we will open database up in thenext so that you can take a photo of any person in real life and find out his information on web3
+          <br/>1:1 mapping, and eternal soul binding...
+    </n-alert>
+    <n-divider /> 
     <NSpin :show="state.netsLoadModel">
     <div class="page_draw" v-show="!state.netsLoadModel">
       <section class="draw-section">
