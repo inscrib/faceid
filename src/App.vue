@@ -41,7 +41,8 @@
   </n-layout-header>
 
   <n-alert title="Warning!" type="info" closable>
-    It is still in testing pharase and the contract hasnt officially uploaded.<br/> pls do not transfer any assets to address.  </n-alert>
+    It is still in testing pharase and the contract hasnt officially uploaded.<br/> pls do not transfer any assets to address.
+<br/>if you have face 403 error. click <n-button @click="clearAllSiteData">this </n-button>  </n-alert>
 
 <n-layout-content class="main-content">
     <div class="content-wrapper">
