@@ -6,23 +6,6 @@
 <div class="background">
 <div class="app-container" :class="{ 'dark-theme': isDarkTheme }">
 <n-layout class="layout">
-<!-- <n-layout-header class="header">
-<n-h3>FACEID -- the fairest token distribution</n-h3>
-<n-tabs
-type="segment"
-animated
-v-model:value="activeTab"
-@update:value="handleTabChange"
->
-<n-tab-pane name="Home" tab="Home" />
-<n-tab-pane name="Upload" tab="Upload" />
-<n-tab-pane name="About" tab="About" />
-<n-tab-pane name="test" tab="test" />
-
-</n-tabs>
-</n-layout-header> -->
-
-
 
 <n-layout-header class="header">
     <div class="header-content">
@@ -249,6 +232,7 @@ const { isConnected, disconnect, principal, activeProvider } = useConnect({
   onDisconnect: () => {
     console.log("Signed out");
     clearAllSiteData();
+    refreshPage();
     // 刷新页面以确保所有更改生效
   }
 });
