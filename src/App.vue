@@ -159,7 +159,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch ,onUnmounted} from "vue";
 import { useRouter, useRoute } from "vue-router";
 import {
   NConfigProvider,
@@ -228,12 +228,9 @@ const clearAllSiteData = () => {
 const { isConnected, disconnect, principal, activeProvider } = useConnect({
   onConnect: () => {
     console.log("Signed in");
-    refreshPage();
   },
   onDisconnect: () => {
     console.log("Signed out");
-    clearAllSiteData();
-    refreshPage();
     // 刷新页面以确保所有更改生效
   }
 });
@@ -254,7 +251,9 @@ activeTab.value = newRouteName;
 const handleTabChange = (tabName) => {
 router.push({ name: tabName });
 };
-
+onUnmounted(() => {
+clearAllSiteData();
+}
 const handleThemeChange = (value) => {
 currentTheme.value = value ? naiveDarkTheme : null;
 };
