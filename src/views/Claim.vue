@@ -24,8 +24,7 @@
                 pending...
               </n-tag>
             </n-space>
-          </template>
-          First, you need to upload your facial information to the contract.<br/> If your device supports a camera, the system will automatically activate it.<br/> If not, you may upload an ID photo or driver's license.<br/> Once your information is uploaded, you can click the claim button to directly access the Claim function.<br/><br/>
+          </template>you can simply click "Claim" to proceed to the token claiming step if you already finisted recognition..<br/><br/>
           <n-progress
             type="line"
             status="info"
