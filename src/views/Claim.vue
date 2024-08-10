@@ -250,10 +250,10 @@
     };
 
 
-    const loadCard = async () => {
+      const loadCard = async () => {
+        showCard.value = true;
       await loadFaceApiModels();
       await restart();
-      showCard.value = true;
       };
 
 
