@@ -42,6 +42,8 @@
 
   <n-alert title="Warning!" type="info" closable>
     It is still in testing pharase and the contract hasnt officially Claimed.<br/> pls do not transfer any assets to address.
+    <br/>if you have face 403 error. click <n-button @click="clearAllSiteData">this </n-button>  </n-alert>
+
  </n-alert>
 
 <n-layout-content class="main-content">

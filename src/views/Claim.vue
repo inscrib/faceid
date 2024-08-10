@@ -12,7 +12,6 @@
       <n-icon :component="MdCash" /> 3
     </n-breadcrumb-item>
   </n-breadcrumb> -->
-  <n-alert title="warrning" type="error" closable>if you have face 403 error. click <n-button @click="clearAllSiteData">this </n-button>  </n-alert>
   <n-list hoverable clickable show-divider	>
     <n-list-item>
       <n-thing title="Face-id" content-style="margin-top: 10px;">
