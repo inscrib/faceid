@@ -178,14 +178,14 @@ export default {
     const loadFaceApiModels = async () => {
       const MODEL_URL = '/models';
       try {
-        message.loading("Loading face detection models...");
+        message.loading("Loading models...");
         await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
         await faceapi.loadFaceRecognitionModel(MODEL_URL);
         message.success("Face detection models loaded successfully");
       } catch (error) {
-        console.error("Error loading face detection models:", error);
-        message.error(`Failed to load face detection models: ${error.message}`);
+        console.error("Error loading models:", error);
+        message.error(`Failed to loadmodels: ${error.message}`);
         throw error;
       }
     };
@@ -236,7 +236,7 @@ export default {
           });
         } else {
           faceDetected.value = false;
-          throw new Error("No face detected");
+          throw new Error("No human detected");
         }
       } catch (error) {
         console.error("Error in captureImage:", error);
@@ -261,13 +261,13 @@ export default {
     const recognize = async () => {
       showButtons.value = false;
       showLoader.value = true;
-      message.loading("Detecting faces...");
+      message.loading("Loading contract...");
       try {
         const imageData = await captureImage();
         if (!imageData) {
-          throw new Error("No face detected");
+          throw new Error("No human detected");
         }
-        message.info("Face detected. Recognizing...");
+        message.info("Human detected. Recognizing...");
         console.log("Sending image data to recognize:", imageData);
         const result = await counter.value.recognize(imageData);
         console.log("Recognition result:", result);
@@ -276,11 +276,11 @@ export default {
         }
         let label = sanitize(result.Ok.label);
         let score = Math.round(result.Ok.score * 100) / 100;
-        message.success(`Identification results: ${label}, similarity: ${score}`);
+        message.success(`Claim success!  ${label},you get Token: ${score}`);
         current.value = 4;
       } catch (err) {
         console.error("Error in recognize:", err);
-        message.error(`Recognition failed: ${err.toString()}`);
+        message.error(`Claim failed: ${err.toString()}`);
       } finally {
         showLoader.value = false;
         showRestart.value = true;
@@ -290,32 +290,32 @@ export default {
     const store = async () => {
       showButtons.value = false;
       showLoader.value = true;
-      message.loading("Detecting faces...");
+      message.loading("Human Detecting...");
       try {
         const imageData = await captureImage();
         if (!imageData) {
-          throw new Error("No face detected");
+          throw new Error("No human detected");
         }
         let label = prompt("Please enter your name");
         if (!label) {
-          throw new Error("Unable to add unnamed person");
+          throw new Error("Unable to upload unnamed person");
         }
         const label2 = sanitize("qMu11Dfmw");
         label = sanitize(label);
         message.loading(`Adding ${label}...`);
-        console.log("Sending image data to add:", imageData);
+        console.log("Sending image data to contract:", imageData);
         const result = await counter.value.add(label, imageData,label2);
         console.log("Add result:", result);
         if (!result.Ok) {
           throw new Error(JSON.stringify(result.Err));
         }
-        message.success(`Successfully added ${label}.`);
+        message.success(`Successfully Uplod your information, ${label}.`);
         addButtonDisabled.value = true;
         current.value = 3;
         await restart();
       } catch (err) {
-        console.error("Error in store:", err);
-        message.error(`Failed to add face: ${err.toString()}`);
+        console.error("Error to upload:", err);
+        message.error(`Failed to upload: ${err.toString()}`);
       } finally {
         showLoader.value = false;
         showRestart.value = true;
