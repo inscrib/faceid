@@ -5,7 +5,17 @@
 
     <n-card title=" FACE-ID">
     <template #cover>
-      <img src="https://i.ibb.co/RgdfZY3/Snipaste-2024-07-30-00-18-01.png">
+      <n-carousel show-arrow>
+        <img
+      class="carousel-img"
+      src="https://ice.frostsky.com/2024/08/11/079c13cd08df740fb9e00ebc4a414859.jpeg">
+      <img
+      class="carousel-img"
+      src="https://ice.frostsky.com/2024/08/11/7d69c0bd5c29764300523f3cc5474b33.jpeg">
+    <img
+      class="carousel-img"
+      src="https://ice.frostsky.com/2024/08/11/38d1def6b6ffcfad997b666bcc5bd5e3.jpeg">
+  </n-carousel>
     </template>
    First Token distribution by face recognize build on the internet computer.<br/>
    Use on-chain facial recognition to achieve the fairest token distribution
