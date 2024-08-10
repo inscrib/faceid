@@ -21,7 +21,10 @@
                 br5f7-7uaaa-aaaaa-qaaca-cai
               </n-tag>
               <n-tag :bordered="false" type="loading" size="small">
-                pending...
+                total num: 200
+              </n-tag>
+              <n-tag :bordered="false" type="error" size="small">
+                Deploy time: 2024/8/11
               </n-tag>
             </n-space>
           </template>you can simply click "Claim" to proceed to the token claiming step if you already finisted recognition..<br/><br/>
@@ -111,12 +114,6 @@
 
       <div v-if="current === 3" class="add-or-recognize-step">   
         <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
-          <img
-            v-if="showImage"
-            :src="imageSrc"
-            alt="UploadImg"
-            class="media"
-          />
           <video
             v-if="showVideo"
             ref="video"
