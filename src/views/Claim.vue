@@ -114,6 +114,12 @@
   
         <div v-if="current === 3" class="add-or-recognize-step">   
           <div class="media-container" :class="{ 'white-background': !imageSrc && !showVideo }">
+            <img
+              v-if="showImage"
+              :src="imageSrc"
+              alt="UploadImg"
+              class="media"
+            />
             <video
               v-if="showVideo"
               ref="video"
@@ -128,7 +134,7 @@
             <div v-if="showLoader" class="loader-container">
               <n-spin size="large" />
             </div>
-          </div>  
+          </div> 
           <n-divider />
           <n-button type="primary" @click="recognize" :disabled="!showButtons || !faceDetected">
             CLAIM Token
