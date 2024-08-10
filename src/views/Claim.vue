@@ -106,6 +106,8 @@
               ADD YOUR DATA
             </n-button>
           </div>  
+          <n-divider />   
+
           <n-button @click="next">CLAIM</n-button>
 
         </div>  
