@@ -1,0 +1,60 @@
+{
+  "name": "faceid",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@connect2ic/core": "^0.2.0-beta.24",
+    "@connect2ic/vue": "^0.2.0-beta.24",
+    "@dfinity/agent": "^0.18.1",
+    "@dfinity/auth-client": "^2.0.0",
+    "@dfinity/authentication": "^0.14.2",
+    "@dfinity/candid": "^2.0.0",
+    "@dfinity/identity": "^2.0.0",
+    "@dfinity/principal": "^2.0.0",
+    "core-js": "^3.37.1",
+    "css-loader": "^7.1.2",
+    "face-api.js": "^0.22.2",
+    "mongodb": "^6.8.0",
+    "naive-ui": "^2.39.0",
+    "register-service-worker": "^1.7.2",
+    "vfonts": "^0.0.3",
+    "vue": "^3.2.13",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-pwa": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
