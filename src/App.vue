@@ -179,7 +179,6 @@ darkTheme as naiveDarkTheme,
 import { ConnectButton, ConnectDialog, useConnect } from "@connect2ic/vue";
 require('@connect2ic/core/style.css');
 
-
 const clearAllSiteData = () => {
   // 清除 localStorage
   localStorage.clear();
@@ -224,8 +223,10 @@ const clearAllSiteData = () => {
     });
   }
 
-  console.log("All site data cleared");
-}
+  // 刷新页面
+  location.reload();
+};
+
 
 
 const { isConnected, disconnect, principal, activeProvider } = useConnect({
