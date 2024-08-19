@@ -21,7 +21,7 @@
    Use on-chain facial recognition to achieve the fairest token distribution
   </n-card>
   <n-divider />
-    <n-button @click="$router.push('/upload')">
+    <n-button @click="$router.push('/claim')">
       CLAIM
     </n-button>
   </div>
@@ -35,7 +35,7 @@
     :bordered="false"
   />
   <n-divider />
-  <n-button @click="$router.push('/test')">
+  <n-button @click="$router.push('/deploy')">
       DEPLOY
     </n-button>
   </n-card>
