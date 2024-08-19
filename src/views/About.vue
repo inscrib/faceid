@@ -72,18 +72,19 @@
         <n-button @click="getRecognitionResults" :loading="loadingResults">
           Get Recognition Results
         </n-button>
-        <n-progress
-      color="green"
-      type="dashboard"
-      :gap-offset-degree="0"
-      :gap-degree="120"
-      :percentage="5"
-    />
 
     <n-list hoverable clickable show-divider	>
     <n-list-item>
       <n-thing title="Face-id" content-style="margin-top: 10px;">
         <template #description>
+          <n-progress
+          color="green"
+      type="line"
+      :percentage="progressPercentage"
+      :height="24"
+      :border-radius="4"
+      :fill-border-radius="0"
+    />
           <n-space size="small" style="margin-top: 4px">
             <n-tag :bordered="false" type="info" size="small">
               br5f7-7uaaa-aaaaa-qaaca-cai
@@ -91,21 +92,19 @@
             <n-tag :bordered="false" type="loading" size="small">
               pending...
             </n-tag>
-            <n-data-table
+      <n-data-table
           :columns="columns"
           :data="results"
           :bordered="true"
           v-if="results.length"
         />
+
           </n-space>
         </template>
       </n-thing>
     </n-list-item>
 
   </n-list>
-
-
-
 
       </n-space>
     </n-card>
@@ -125,7 +124,7 @@
 </template>
 
 <script setup>
-import { ref,onMounted  } from 'vue'
+import { ref,onMounted,computed  } from 'vue'
 import { useCanister ,useBalance,useConnect  } from '@connect2ic/vue'
 import { useDialog } from 'naive-ui'
 
@@ -196,6 +195,7 @@ const getAuthorizedUsers = async () => {
 // Recognition Results
 const results = ref([])
 const loadingResults = ref(false)
+const totalResults = ref(0)
 
 const columns = [
   { title: 'Address', key: 'pid' },
@@ -203,33 +203,33 @@ const columns = [
   { title: 'Token', key: 'score' }
 ]
 
+const progressPercentage = computed(() => {
+  return Math.min(Math.round((totalResults.value / 100) * 100), 100)
+})
+
 
 const getRecognitionResults = async () => {
   loadingResults.value = true
   try {
     const rawResults = await canister.value.get_all_recognition_results()
+    console.log('Raw results:', rawResults) // 添加这行来查看原始数据
+    totalResults.value = rawResults.length
     results.value = rawResults.map(result => {
-      const [pid, label, score] = result.split(',')
+      const [pidPart, labelPart, scorePart] = result.split(', ')
 
-      // 处理 PID
-      const processedPid = pid.replace('principal:', '').trim()
+      const pid = pidPart.replace('principal:', '').trim()
+      const label = labelPart.replace('Name:', '').trim()
+      
+      // 正确处理 Token 部分
+      const scoreMatch = scorePart.match(/Token:\s*([\d.]+)/)
+      let score = scoreMatch ? parseFloat(scoreMatch[1]) : 0
 
-      // 处理 Label，去除 "Name:" 部分
-      const processedLabel = label.replace('label:', '').replace('Name:', '').trim()
+      // 保留4位小数
+      score = score.toFixed(5)*10000
 
-      // 处理 Score，乘以 10000，处理为0情况
-      let processedScore = parseFloat(score.replace('score:', '').trim()) * 10000
-      if (isNaN(processedScore) || processedScore === 0) {
-        processedScore = "0.00"
-      } else {
-        processedScore = processedScore.toFixed(2)
-      }
+      console.log(`Processed result: pid=${pid}, label=${label}, score=${score}`) // 添加这行来查看处理后的数据
 
-      return { 
-        pid: processedPid, 
-        label: processedLabel, 
-        score: processedScore
-      }
+      return { pid, label, score }
     })
   } catch (error) {
     console.error('Error getting recognition results:', error)
@@ -237,6 +237,7 @@ const getRecognitionResults = async () => {
     loadingResults.value = false
   }
 }
+
 
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -278,9 +279,9 @@ const handleClick = () => {
 };
       onMounted(async () => {
         await fetchBalance();
-        await getCycles(); 
-        await getRecognitionResults();
-        await getAuthorizedUsers();
+  await getCycles(); 
+  await getRecognitionResults();
+  await getAuthorizedUsers();
       });
 
 
