@@ -13,21 +13,21 @@
         <n-statistic label="Supply" value="100b" />
       </n-gi>
       <n-gi>
-        <n-statistic label="Progress" value="5%" />
+        <n-statistic label="Progress" :value="`${progressPercentage}%`" />
       </n-gi>
       <n-gi>
-        <n-statistic label="Holder" value="null" />
+        <n-statistic label="holder" :value="`${progressPercentage}`" />
       </n-gi>
       <n-gi>
-        <n-statistic label="deployid" value="0" />
+        <n-statistic label="deployid" value="1" />
       </n-gi>
     </n-grid>
     <template #title>
-      <a href="https://anyway.fm/" style="text-decoration: none; color: inherit">face-id</a>
+      <a href="/" style="text-decoration: none; color: inherit">face-id</a>
     </template>
 
     <template #avatar>
-      <n-avatar  :size="48" src="https://pbs.twimg.com/profile_images/1773015678758387712/XQIG1d9o_400x400.jpg" />
+      <n-avatar  :size="48" src="https://inscrib.github.io/picx-images-hosting/images.7egp8bww3i.webp" />
     </template>
     <template #extra>
       <n-space>
@@ -283,12 +283,6 @@ const handleClick = () => {
   await getRecognitionResults();
   await getAuthorizedUsers();
       });
-
-
-
-
-
-
 
 </script>
 
