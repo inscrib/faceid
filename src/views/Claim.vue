@@ -90,26 +90,43 @@
           <div v-if="showLoader" class="loader-container">
             <n-spin size="large" />
           </div>
+        </div>
+        <div v-if="current === 2" class="process-step">   
+          <n-button @click="store" :disabled="!showButtons || !faceDetected">
+            ADD YOUR DATA
+          </n-button>
         </div>  
-        <n-upload
+        <n-divider />  
+        <n-card title="Addition" class="action-card">
+      <n-space justify="space-between" align="center">
+        <n-button type="primary"  @click="showUploadModal = true">
+          Upload Image
+        </n-button>
+        <n-button type="success" @click="showClaimModal = true">
+          CLAIM
+        </n-button>
+      </n-space>
+    </n-card>
+
+    <!-- Upload Modal -->
+    <n-modal v-model:show="showUploadModal" preset="card" title="Image Upload Information" class="centered-modal">
+      <p>If you don't have a camera, you can upload an image like IDcard or driver license for verification.</p>
+      <n-upload
           v-if="showUploadButton"
           accept="image/*"
           :default-upload="false"
           @change="handleFileChange"
           :max="1"
         >
-          <n-divider />
           <n-button>Upload Image</n-button>
         </n-upload>
+    </n-modal>
 
-        <div v-if="current === 2" class="process-step">   
-          <n-button @click="store" :disabled="!showButtons || !faceDetected">
-            ADD YOUR DATA
-          </n-button>
-        </div>  
-        <n-divider />   
-
-        <n-button @click="next">CLAIM</n-button>
+    <!-- Claim Modal -->
+    <n-modal v-model:show="showClaimModal" preset="card" title="Claim Information" class="centered-modal">
+      <p>If you have completed the verification process, you can directly proceed to claim your tokens.</p>
+      <n-button @click="next">CLAIM</n-button>
+    </n-modal>  
       </div>  
 
       <div v-if="current === 3" class="add-or-recognize-step">   
@@ -171,6 +188,8 @@ export default {
     const faceDetected = ref(false);
     const showCard = ref(false);
     const showUploadButton = ref(false);
+    const showUploadModal = ref(false)
+    const showClaimModal = ref(false)
 
     const loadFaceApiModels = async () => {
       const MODEL_URL = '/models';
@@ -466,6 +485,8 @@ export default {
       faceDetected,
       next,
       showUploadButton,
+      showUploadModal,
+      showClaimModal,
     };
   },
 };
@@ -509,5 +530,13 @@ export default {
   background-color: white;
   border: 1px solid #e0e0e0; /* Optional: adds a light border for better visibility */
 }
+.centered-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 </style>
 
