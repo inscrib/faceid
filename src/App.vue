@@ -15,8 +15,7 @@
         :size="28"
          type="success"
       >
-        FACEID
-
+        IDenty
       </n-gradient-text>
       <n-text class="subtitle" :depth="3">
         the fairest token distribution DID
