@@ -18,7 +18,7 @@
         IDenty
       </n-gradient-text>
       <n-text class="subtitle" :depth="3">
-        the fairest token distribution DID
+        the fairest token distribution by AI
       </n-text>
     </div>
     <n-tabs
